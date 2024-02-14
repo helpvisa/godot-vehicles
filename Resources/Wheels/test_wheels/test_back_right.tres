@@ -1,13 +1,7 @@
-[gd_resource type="Resource" load_steps=4 format=3 uid="uid://bqkgqctuo2xet"]
+[gd_resource type="Resource" load_steps=4 format=3 uid="uid://jy51pahnhixl"]
 
-[ext_resource type="Curve" uid="uid://dy50co58yq8db" path="res://Resources/Curves/Tires/standard_tarmac.tres" id="1_a76rd"]
-
-[sub_resource type="CylinderMesh" id="CylinderMesh_8iqb4"]
-top_radius = 0.381
-bottom_radius = 0.381
-height = 0.2
-radial_segments = 16
-rings = 2
+[ext_resource type="PackedScene" uid="uid://fvpsqqg71i87" path="res://Models/Wheels/test_wheel.glb" id="1_pla04"]
+[ext_resource type="Curve" uid="uid://dy50co58yq8db" path="res://Resources/Curves/Tires/standard_tarmac.tres" id="2_wxg3t"]
 
 [sub_resource type="GDScript" id="GDScript_b4dvv"]
 script/source = "extends Resource
@@ -15,7 +9,7 @@ script/source = "extends Resource
 # public / settable
 @export var offset: Vector3
 @export var pacejkaCurve: Curve
-@export var model: Mesh
+@export var model: PackedScene
 @export var radius: float
 @export var suspensionStrength: float
 @export var suspensionDamping: float
@@ -67,9 +61,9 @@ func _init(\\
 
 [resource]
 script = SubResource("GDScript_b4dvv")
-offset = Vector3(0.6, -0.55, -1.2)
-pacejkaCurve = ExtResource("1_a76rd")
-model = SubResource("CylinderMesh_8iqb4")
+offset = Vector3(0.65, -0.55, -1.2)
+pacejkaCurve = ExtResource("2_wxg3t")
+model = ExtResource("1_pla04")
 radius = 0.33
 suspensionStrength = 2400.0
 suspensionDamping = 1800.0

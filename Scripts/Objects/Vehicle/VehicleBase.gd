@@ -13,13 +13,10 @@ var input = {
 
 func _ready():
 	for wheel in wheels:
-		var instanced_mesh_container = Node3D.new()
-		var instanced_mesh = MeshInstance3D.new()
-		instanced_mesh.mesh = wheel.model
-		instanced_mesh_container.add_child(instanced_mesh)
-		instanced_mesh_container.position += wheel.offset
-		instanced_mesh_container.rotate_object_local(Vector3(0, 0, 1), deg_to_rad(90))
-		get_node("RigidBody3D").add_child(instanced_mesh_container)
+		# position wheels based on offsets
+		var instanced_node = wheel.model.instantiate()
+		instanced_node.position += wheel.offset
+		get_node("RigidBody3D").add_child(instanced_node)
 
 
 func _process(delta):

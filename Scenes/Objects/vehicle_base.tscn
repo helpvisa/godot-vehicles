@@ -1,12 +1,12 @@
-[gd_scene load_steps=14 format=3 uid="uid://cggf23ee1flqk"]
+[gd_scene load_steps=18 format=3 uid="uid://cggf23ee1flqk"]
 
 [ext_resource type="Script" path="res://Scripts/Objects/Vehicle/VehicleBase.gd" id="1_ykdqn"]
 [ext_resource type="Resource" uid="uid://2odx3nsbk75e" path="res://Resources/Engines/base_engine.tres" id="2_vky11"]
 [ext_resource type="Resource" uid="uid://bd2ebcnarl2c" path="res://Resources/Transmissions/base_transmission.tres" id="3_dk50w"]
-[ext_resource type="Resource" uid="uid://coajauoddvp1j" path="res://Resources/Wheels/test_wheels/test_front_left.tres" id="4_ibe2d"]
-[ext_resource type="Resource" uid="uid://buysersmqanv4" path="res://Resources/Wheels/test_wheels/test_front_right.tres" id="5_gsgam"]
-[ext_resource type="Resource" uid="uid://bdkt6arxvqjye" path="res://Resources/Wheels/test_wheels/test_back_left.tres" id="6_hptju"]
-[ext_resource type="Resource" uid="uid://bqkgqctuo2xet" path="res://Resources/Wheels/test_wheels/test_back_right.tres" id="7_dsapr"]
+[ext_resource type="Resource" uid="uid://dxbfg04pq821p" path="res://Resources/Wheels/test_wheels/test_back_left.tres" id="4_xhgek"]
+[ext_resource type="Resource" uid="uid://jy51pahnhixl" path="res://Resources/Wheels/test_wheels/test_back_right.tres" id="5_t2kp1"]
+[ext_resource type="Resource" uid="uid://esgf1xa8hmyr" path="res://Resources/Wheels/test_wheels/test_front_left.tres" id="6_hoh53"]
+[ext_resource type="Resource" uid="uid://k34yfwjdokih" path="res://Resources/Wheels/test_wheels/test_front_right.tres" id="7_kw40k"]
 
 [sub_resource type="FastNoiseLite" id="FastNoiseLite_7q00u"]
 
@@ -26,6 +26,18 @@ normal_texture = SubResource("NoiseTexture2D_4icuk")
 clearcoat_enabled = true
 clearcoat_roughness = 0.15
 
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_mr8ux"]
+albedo_color = Color(0, 0, 0, 1)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_7axxk"]
+albedo_color = Color(0, 0, 0, 1)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_q5k3w"]
+albedo_color = Color(0, 0, 0, 1)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_y4lw1"]
+albedo_color = Color(0, 0, 0, 1)
+
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_pafbj"]
 albedo_color = Color(0, 1, 1, 1)
 roughness = 0.0
@@ -41,7 +53,7 @@ size = Vector3(1.4, 1.3, 3.6)
 script = ExtResource("1_ykdqn")
 engine = ExtResource("2_vky11")
 transmission = ExtResource("3_dk50w")
-wheels = Array[Resource]([ExtResource("4_ibe2d"), ExtResource("5_gsgam"), ExtResource("6_hptju"), ExtResource("7_dsapr")])
+wheels = Array[Resource]([ExtResource("4_xhgek"), ExtResource("5_t2kp1"), ExtResource("6_hoh53"), ExtResource("7_kw40k")])
 
 [node name="RigidBody3D" type="RigidBody3D" parent="."]
 
@@ -51,14 +63,32 @@ size = Vector3(1.4, 1.3, 3.6)
 material = SubResource("StandardMaterial3D_4w3xr")
 
 [node name="CSGCylinder3D" type="CSGCylinder3D" parent="RigidBody3D/Body"]
-transform = Transform3D(1.5847e-07, -1, -0.000702254, 0.999997, 1.28282e-06, -0.00160323, 0.00160323, -0.000702253, 0.999998, 8.28548e-05, -0.466593, -1.17067)
+transform = Transform3D(1.58303e-07, -0.318309, -0.000701702, 1.00089, 4.08214e-07, -0.00160197, 0.00160465, -0.000223534, 0.999212, 0.674883, -0.631845, -1.17116)
 operation = 2
+radius = 0.4
 sides = 32
+material = SubResource("StandardMaterial3D_mr8ux")
 
 [node name="CSGCylinder3D2" type="CSGCylinder3D" parent="RigidBody3D/Body"]
-transform = Transform3D(1.58005e-07, -1, -0.000702254, 0.999997, 1.28142e-06, -0.00160323, 0.00160323, -0.000702253, 0.999998, 0.00115372, -0.469333, 1.20644)
+transform = Transform3D(1.57838e-07, -0.318309, -0.000701702, 1.00089, 4.07778e-07, -0.00160197, 0.00160465, -0.000223534, 0.999212, 0.675954, -0.634585, 1.20595)
 operation = 2
+radius = 0.4
 sides = 32
+material = SubResource("StandardMaterial3D_7axxk")
+
+[node name="CSGCylinder3D3" type="CSGCylinder3D" parent="RigidBody3D/Body"]
+transform = Transform3D(1.58071e-07, -0.318309, -0.000701702, 1.00088, 4.08011e-07, -0.00160197, 0.00160465, -0.000223534, 0.999212, -0.738879, -0.63369, -1.16867)
+operation = 2
+radius = 0.4
+sides = 32
+material = SubResource("StandardMaterial3D_q5k3w")
+
+[node name="CSGCylinder3D4" type="CSGCylinder3D" parent="RigidBody3D/Body"]
+transform = Transform3D(1.57605e-07, -0.318309, -0.000701702, 1.00088, 4.07574e-07, -0.00160197, 0.00160465, -0.000223534, 0.999212, -0.737808, -0.636431, 1.20844)
+operation = 2
+radius = 0.4
+sides = 32
+material = SubResource("StandardMaterial3D_y4lw1")
 
 [node name="CSGBox3D" type="CSGBox3D" parent="RigidBody3D/Body"]
 transform = Transform3D(0.999993, 0.000831183, 0.000846614, 0.000133825, 0.629997, -0.776596, -0.00117886, 0.776593, 0.629998, -0.0029324, 1.0787, -1.15619)
