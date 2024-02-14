@@ -1,0 +1,25 @@
+[gd_scene load_steps=5 format=3 uid="uid://cggf23ee1flqk"]
+
+[ext_resource type="Script" path="res://Scripts/Objects/Vehicle/VehicleBase.gd" id="1_ykdqn"]
+[ext_resource type="Resource" uid="uid://2odx3nsbk75e" path="res://Resources/Engines/base_engine.tres" id="2_vky11"]
+[ext_resource type="Resource" uid="uid://bd2ebcnarl2c" path="res://Resources/Transmissions/base_transmission.tres" id="3_dk50w"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_terl1"]
+size = Vector3(1.4, 1.3, 3.6)
+
+[node name="VehicleBase" type="Node3D"]
+script = ExtResource("1_ykdqn")
+engine = ExtResource("2_vky11")
+transmission = ExtResource("3_dk50w")
+
+[node name="RigidBody3D" type="RigidBody3D" parent="."]
+
+[node name="test_camera" type="Camera3D" parent="RigidBody3D"]
+transform = Transform3D(0.724115, 0.346095, -0.596553, -0.000903704, 0.865448, 0.500999, 0.689679, -0.362242, 0.626996, -2.35777, 2.55662, 3.42916)
+
+[node name="Body" type="CSGBox3D" parent="RigidBody3D"]
+transform = Transform3D(0.999999, 0.00130407, -0.000448988, -0.00130356, 0.999999, 0.00115332, 0.000450486, -0.00115274, 0.999999, 0, 0, 0)
+size = Vector3(1.4, 1.3, 3.6)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="RigidBody3D"]
+shape = SubResource("BoxShape3D_terl1")

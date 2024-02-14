@@ -1,0 +1,27 @@
+[gd_resource type="Resource" load_steps=3 format=3 uid="uid://2odx3nsbk75e"]
+
+[ext_resource type="Curve" uid="uid://vrdyihmbt5te" path="res://Resources/Curves/Torque/test_sporty.tres" id="1_bjvp2"]
+
+[sub_resource type="GDScript" id="GDScript_al2da"]
+script/source = "extends Resource
+
+# public / settable
+@export var torqueCurve: Curve
+@export var maxRPM: float
+@export var minRPM: float
+
+# local
+var currentRPM
+
+func _init(p_torqueCurve = null, p_maxRPM = 7000, p_minRPM = 0, p_currentRPM = 0):
+	torqueCurve = p_torqueCurve
+	maxRPM = p_maxRPM
+	minRPM = p_minRPM
+	currentRPM = p_currentRPM
+"
+
+[resource]
+script = SubResource("GDScript_al2da")
+torqueCurve = ExtResource("1_bjvp2")
+maxRPM = 7000.0
+minRPM = 0.0
