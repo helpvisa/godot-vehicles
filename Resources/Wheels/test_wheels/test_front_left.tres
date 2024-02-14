@@ -1,6 +1,6 @@
-[gd_resource type="Resource" load_steps=4 format=3 uid="uid://bnggbckc3trif"]
+[gd_resource type="Resource" load_steps=4 format=3 uid="uid://coajauoddvp1j"]
 
-[ext_resource type="Curve" uid="uid://dy50co58yq8db" path="res://Resources/Curves/Tires/standard_tarmac.tres" id="1_4iber"]
+[ext_resource type="Curve" uid="uid://dy50co58yq8db" path="res://Resources/Curves/Tires/standard_tarmac.tres" id="1_bwbqp"]
 
 [sub_resource type="CylinderMesh" id="CylinderMesh_8iqb4"]
 top_radius = 0.381
@@ -67,13 +67,13 @@ func _init(\\
 
 [resource]
 script = SubResource("GDScript_b4dvv")
-offset = Vector3(0, 0, 0)
-pacejkaCurve = ExtResource("1_4iber")
+offset = Vector3(-0.6, -0.55, 1.2)
+pacejkaCurve = ExtResource("1_bwbqp")
 model = SubResource("CylinderMesh_8iqb4")
 radius = 0.33
 suspensionStrength = 2400.0
 suspensionDamping = 1800.0
-powered = true
+powered = false
 steerable = true
 brakes = true
 maxDriveForce = 13720.0

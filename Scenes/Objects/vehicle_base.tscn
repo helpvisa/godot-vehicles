@@ -1,8 +1,38 @@
-[gd_scene load_steps=5 format=3 uid="uid://cggf23ee1flqk"]
+[gd_scene load_steps=14 format=3 uid="uid://cggf23ee1flqk"]
 
 [ext_resource type="Script" path="res://Scripts/Objects/Vehicle/VehicleBase.gd" id="1_ykdqn"]
 [ext_resource type="Resource" uid="uid://2odx3nsbk75e" path="res://Resources/Engines/base_engine.tres" id="2_vky11"]
 [ext_resource type="Resource" uid="uid://bd2ebcnarl2c" path="res://Resources/Transmissions/base_transmission.tres" id="3_dk50w"]
+[ext_resource type="Resource" uid="uid://coajauoddvp1j" path="res://Resources/Wheels/test_wheels/test_front_left.tres" id="4_ibe2d"]
+[ext_resource type="Resource" uid="uid://buysersmqanv4" path="res://Resources/Wheels/test_wheels/test_front_right.tres" id="5_gsgam"]
+[ext_resource type="Resource" uid="uid://bdkt6arxvqjye" path="res://Resources/Wheels/test_wheels/test_back_left.tres" id="6_hptju"]
+[ext_resource type="Resource" uid="uid://bqkgqctuo2xet" path="res://Resources/Wheels/test_wheels/test_back_right.tres" id="7_dsapr"]
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_7q00u"]
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_4icuk"]
+width = 1024
+height = 1024
+seamless = true
+seamless_blend_skirt = 1.0
+as_normal_map = true
+noise = SubResource("FastNoiseLite_7q00u")
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_4w3xr"]
+albedo_color = Color(0.588235, 0.768627, 0.247059, 1)
+metallic = 1.0
+normal_enabled = true
+normal_texture = SubResource("NoiseTexture2D_4icuk")
+clearcoat_enabled = true
+clearcoat_roughness = 0.15
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_pafbj"]
+albedo_color = Color(0, 1, 1, 1)
+roughness = 0.0
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_v8kuw"]
+albedo_color = Color(0, 1, 1, 1)
+roughness = 0.0
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_terl1"]
 size = Vector3(1.4, 1.3, 3.6)
@@ -11,15 +41,42 @@ size = Vector3(1.4, 1.3, 3.6)
 script = ExtResource("1_ykdqn")
 engine = ExtResource("2_vky11")
 transmission = ExtResource("3_dk50w")
+wheels = Array[Resource]([ExtResource("4_ibe2d"), ExtResource("5_gsgam"), ExtResource("6_hptju"), ExtResource("7_dsapr")])
 
 [node name="RigidBody3D" type="RigidBody3D" parent="."]
-
-[node name="test_camera" type="Camera3D" parent="RigidBody3D"]
-transform = Transform3D(0.724115, 0.346095, -0.596553, -0.000903704, 0.865448, 0.500999, 0.689679, -0.362242, 0.626996, -2.35777, 2.55662, 3.42916)
 
 [node name="Body" type="CSGBox3D" parent="RigidBody3D"]
 transform = Transform3D(0.999999, 0.00130407, -0.000448988, -0.00130356, 0.999999, 0.00115332, 0.000450486, -0.00115274, 0.999999, 0, 0, 0)
 size = Vector3(1.4, 1.3, 3.6)
+material = SubResource("StandardMaterial3D_4w3xr")
+
+[node name="CSGCylinder3D" type="CSGCylinder3D" parent="RigidBody3D/Body"]
+transform = Transform3D(1.5847e-07, -1, -0.000702254, 0.999997, 1.28282e-06, -0.00160323, 0.00160323, -0.000702253, 0.999998, 8.28548e-05, -0.466593, -1.17067)
+operation = 2
+sides = 32
+
+[node name="CSGCylinder3D2" type="CSGCylinder3D" parent="RigidBody3D/Body"]
+transform = Transform3D(1.58005e-07, -1, -0.000702254, 0.999997, 1.28142e-06, -0.00160323, 0.00160323, -0.000702253, 0.999998, 0.00115372, -0.469333, 1.20644)
+operation = 2
+sides = 32
+
+[node name="CSGBox3D" type="CSGBox3D" parent="RigidBody3D/Body"]
+transform = Transform3D(0.999993, 0.000831183, 0.000846614, 0.000133825, 0.629997, -0.776596, -0.00117886, 0.776593, 0.629998, -0.0029324, 1.0787, -1.15619)
+operation = 2
+size = Vector3(1.66455, 1.43188, 1)
+material = SubResource("StandardMaterial3D_pafbj")
+
+[node name="CSGBox3D3" type="CSGBox3D" parent="RigidBody3D/Body"]
+transform = Transform3D(0.999991, 0.00234735, 0.000453079, 0.0015709, -0.502322, -0.864678, -0.00180212, 0.864674, -0.502326, -0.00175102, 1.07568, 1.46623)
+operation = 2
+size = Vector3(1.66455, 1.43188, 1)
+material = SubResource("StandardMaterial3D_pafbj")
+
+[node name="CSGBox3D2" type="CSGBox3D" parent="RigidBody3D/Body"]
+transform = Transform3D(0.99999, 0.001735, 0.000861159, 0.000837116, 0.0138069, -0.999903, -0.00174673, 0.9999, 0.0138053, 0.000728713, 0.735147, -2.12409)
+operation = 2
+size = Vector3(1.66455, 1.43188, 1)
+material = SubResource("StandardMaterial3D_v8kuw")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="RigidBody3D"]
 shape = SubResource("BoxShape3D_terl1")
