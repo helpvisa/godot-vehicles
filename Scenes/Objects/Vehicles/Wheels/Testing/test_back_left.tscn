@@ -1,0 +1,14 @@
+[gd_scene load_steps=4 format=3 uid="uid://di60ndesnskpv"]
+
+[ext_resource type="Script" path="res://addons/VehicleComponents/Wheel/wheel_class.gd" id="1_unik3"]
+[ext_resource type="Curve" uid="uid://dy50co58yq8db" path="res://Resources/Curves/Tires/standard_tarmac.tres" id="2_egn3o"]
+[ext_resource type="PackedScene" uid="uid://fvpsqqg71i87" path="res://Models/Wheels/test_wheel.glb" id="3_nwr3b"]
+
+[node name="test_back_left" type="Node3D"]
+script = ExtResource("1_unik3")
+offset = Vector3(-0.65, -0.3, -1.2)
+pacejkaCurve = ExtResource("2_egn3o")
+model = ExtResource("3_nwr3b")
+powered = false
+steerable = true
+colMask = 128

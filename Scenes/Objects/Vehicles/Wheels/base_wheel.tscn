@@ -1,0 +1,10 @@
+[gd_scene load_steps=4 format=3 uid="uid://55j6ibj0dhdn"]
+
+[ext_resource type="Script" path="res://addons/VehicleComponents/Wheel/wheel_class.gd" id="1_euuv5"]
+[ext_resource type="Curve" uid="uid://dy50co58yq8db" path="res://Resources/Curves/Tires/standard_tarmac.tres" id="2_xrc1o"]
+[ext_resource type="PackedScene" uid="uid://fvpsqqg71i87" path="res://Models/Wheels/test_wheel.glb" id="3_qmwsq"]
+
+[node name="BaseWheel" type="Node3D"]
+script = ExtResource("1_euuv5")
+pacejkaCurve = ExtResource("2_xrc1o")
+model = ExtResource("3_qmwsq")

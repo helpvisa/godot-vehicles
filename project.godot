@@ -15,6 +15,10 @@ run/main_scene="res://Scenes/Areas/demo_scene.tscn"
 config/features=PackedStringArray("4.2", "GL Compatibility")
 config/icon="res://icon.svg"
 
+[editor_plugins]
+
+enabled=PackedStringArray("res://addons/VehicleComponents/Wheel/plugin.cfg")
+
 [physics]
 
 2d/run_on_separate_thread=true

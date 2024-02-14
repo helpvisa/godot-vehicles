@@ -1,13 +1,6 @@
-[gd_resource type="Resource" load_steps=4 format=3 uid="uid://bnggbckc3trif"]
+[gd_resource type="Resource" load_steps=3 format=3 uid="uid://bnggbckc3trif"]
 
 [ext_resource type="Curve" uid="uid://dy50co58yq8db" path="res://Resources/Curves/Tires/standard_tarmac.tres" id="1_4iber"]
-
-[sub_resource type="CylinderMesh" id="CylinderMesh_8iqb4"]
-top_radius = 0.381
-bottom_radius = 0.381
-height = 0.2
-radial_segments = 16
-rings = 2
 
 [sub_resource type="GDScript" id="GDScript_b4dvv"]
 script/source = "extends Resource
@@ -69,7 +62,6 @@ func _init(\\
 script = SubResource("GDScript_b4dvv")
 offset = Vector3(0, 0, 0)
 pacejkaCurve = ExtResource("1_4iber")
-model = SubResource("CylinderMesh_8iqb4")
 radius = 0.33
 suspensionStrength = 2400.0
 suspensionDamping = 1800.0
