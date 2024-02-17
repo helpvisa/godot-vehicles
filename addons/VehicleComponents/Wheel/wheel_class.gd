@@ -5,6 +5,7 @@ extends Node3D
 @export var offset: Vector3 = Vector3(0, 0, 0)
 @export var pacejkaCurve: Curve
 @export var model: PackedScene
+@export var flipModel: bool = false
 @export var radius: float = 0.33
 @export var suspensionStrength: float = 24000
 @export var suspensionDamping: float = 1800
@@ -36,7 +37,10 @@ var appliedAcceleration: float = 0
 # custom functions
 func initModel():
 	if model:
+		# perform check to flip wheel if on left side of car using export var
 		var temp_model = model.instantiate()
+		if flipModel:
+			temp_model.rotate(Vector3(0, 1, 0), deg_to_rad(180))
 		add_child(temp_model)
 	position = offset + Vector3.DOWN * suspensionRange
 
@@ -48,14 +52,13 @@ func updateWheelPosition(parent):
 	var result = space.intersect_ray(query)
 	
 	if result:
-		global_position = result.position + (result.normal * radius)
+		global_position = result.position + (parent.basis.y * radius)
 		isGrounded = true
 	else:
 		global_position = parent.to_global(offset + Vector3.DOWN * suspensionRange)
 		isGrounded = false
 
 func calculateSuspensionForce(parent) -> Vector3:
-	var suspensionOffset = parent.to_global(position)- parent.to_global(offset + (Vector3.DOWN * radius))
+	var suspensionOffset = parent.to_global(position) - parent.to_global(offset + (Vector3.DOWN * radius))
 	var springForce = suspensionOffset * suspensionStrength
-	print(springForce)
 	return springForce
