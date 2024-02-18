@@ -67,12 +67,16 @@ shape = SubResource("BoxShape3D_terl1")
 
 [node name="test_back_left" parent="Wheels" instance=ExtResource("4_3tn5c")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.6, -0.5, 1.2)
+rollingResistance = null
 
 [node name="test_back_right" parent="Wheels" instance=ExtResource("5_yjfsj")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.6, -0.5, 1.2)
+rollingResistance = null
 
 [node name="test_front_left" parent="Wheels" instance=ExtResource("6_60425")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.6, -0.5, -1.2)
+rollingResistance = null
 
 [node name="test_front_right" parent="Wheels" instance=ExtResource("7_ahsy3")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.6, -0.5, -1.2)
+rollingResistance = null
