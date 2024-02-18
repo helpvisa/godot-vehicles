@@ -8,8 +8,10 @@ extends RigidBody3D
 # debug
 var suspensionDebugDisplay: Array[MeshInstance3D]
 var steeringDebugDisplay: Array[MeshInstance3D]
+var accelerationDebugDisplay: Array[MeshInstance3D]
 @export var suspensionDebugMaterial: StandardMaterial3D
 @export var steeringDebugMaterial: StandardMaterial3D
+@export var accelerationDebugMaterial: StandardMaterial3D
 
 # local variables
 var input = {
@@ -21,17 +23,22 @@ var input = {
 func _ready():
 	suspensionDebugMaterial.no_depth_test = true
 	steeringDebugMaterial.no_depth_test = true
+	accelerationDebugMaterial.no_depth_test = true
 	
 	for wheel in wheels:
 		wheel.initModel(self)
 		var tempSuspensionDebugMesh = MeshInstance3D.new()
 		var tempSteeringDebugMesh = MeshInstance3D.new()
+		var tempAccelerationDebugMesh = MeshInstance3D.new()
 		suspensionDebugDisplay.append(tempSuspensionDebugMesh)
 		suspensionDebugDisplay[suspensionDebugDisplay.size() - 1].material_override = suspensionDebugMaterial
 		add_child(suspensionDebugDisplay[suspensionDebugDisplay.size() - 1])
 		steeringDebugDisplay.append(tempSteeringDebugMesh)
 		steeringDebugDisplay[steeringDebugDisplay.size() - 1].material_override = steeringDebugMaterial
 		add_child(steeringDebugDisplay[steeringDebugDisplay.size() - 1])
+		accelerationDebugDisplay.append(tempAccelerationDebugMesh)
+		accelerationDebugDisplay[accelerationDebugDisplay.size() - 1].material_override = accelerationDebugMaterial
+		add_child(accelerationDebugDisplay[accelerationDebugDisplay.size() - 1])
 		
 		# debug
 		if (wheel.steerable):
@@ -72,6 +79,11 @@ func calculateAcceleration(delta):
 				wheels[idx].angularVelocity *= -1
 		else:
 			wheels[idx].applyRollingResistance(delta)
+		# draw debug meshes
+		var tempAccelerationMesh = debugAcceleration(\
+			to_local(wheels[idx].target),\
+			to_local(wheels[idx].target) + wheels[idx].forwardVelocity)
+		accelerationDebugDisplay[idx].mesh = tempAccelerationMesh
 		wheels[idx].animate(delta)
 
 func calculateSteering():
@@ -127,3 +139,11 @@ func debugSteering(pos1, pos2) -> ImmediateMesh:
 	steeringDebugMesh.surface_add_vertex(pos2)
 	steeringDebugMesh.surface_end()
 	return steeringDebugMesh
+
+func debugAcceleration(pos1, pos2) -> ImmediateMesh:
+	var accelerationDebugMesh = ImmediateMesh.new()
+	accelerationDebugMesh.surface_begin(Mesh.PRIMITIVE_LINES)
+	accelerationDebugMesh.surface_add_vertex(pos1)
+	accelerationDebugMesh.surface_add_vertex(pos2)
+	accelerationDebugMesh.surface_end()
+	return accelerationDebugMesh

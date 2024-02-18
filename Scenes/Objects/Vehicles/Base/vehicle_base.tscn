@@ -1,4 +1,4 @@
-[gd_scene load_steps=15 format=3 uid="uid://m0vo372ghciq"]
+[gd_scene load_steps=16 format=3 uid="uid://m0vo372ghciq"]
 
 [ext_resource type="Script" path="res://Scripts/Objects/Vehicle/VehicleBase.gd" id="1_rv6nq"]
 [ext_resource type="Resource" uid="uid://2odx3nsbk75e" path="res://Resources/Engines/base_engine.tres" id="2_8x85s"]
@@ -19,6 +19,10 @@ albedo_color = Color(0.266667, 1, 0, 1)
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_5qcvk"]
 shading_mode = 0
 albedo_color = Color(1, 0, 0, 1)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_1gtod"]
+shading_mode = 0
+albedo_color = Color(0, 0.282353, 1, 1)
 
 [sub_resource type="FastNoiseLite" id="FastNoiseLite_7q00u"]
 
@@ -54,6 +58,7 @@ transmission = ExtResource("3_d37vi")
 wheels = [NodePath("Wheels/test_back_left"), NodePath("Wheels/test_back_right"), NodePath("Wheels/test_front_left"), NodePath("Wheels/test_front_right")]
 suspensionDebugMaterial = SubResource("StandardMaterial3D_2wqsq")
 steeringDebugMaterial = SubResource("StandardMaterial3D_5qcvk")
+accelerationDebugMaterial = SubResource("StandardMaterial3D_1gtod")
 
 [node name="BodyModel" type="CSGBox3D" parent="."]
 transform = Transform3D(0.999999, 0.00130407, -0.000448988, -0.00130356, 0.999999, 0.00115332, 0.000450486, -0.00115274, 0.999999, 0, 0, 0)
@@ -67,16 +72,12 @@ shape = SubResource("BoxShape3D_terl1")
 
 [node name="test_back_left" parent="Wheels" instance=ExtResource("4_3tn5c")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.6, -0.5, 1.2)
-rollingResistance = null
 
 [node name="test_back_right" parent="Wheels" instance=ExtResource("5_yjfsj")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.6, -0.5, 1.2)
-rollingResistance = null
 
 [node name="test_front_left" parent="Wheels" instance=ExtResource("6_60425")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.6, -0.5, -1.2)
-rollingResistance = null
 
 [node name="test_front_right" parent="Wheels" instance=ExtResource("7_ahsy3")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.6, -0.5, -1.2)
-rollingResistance = null

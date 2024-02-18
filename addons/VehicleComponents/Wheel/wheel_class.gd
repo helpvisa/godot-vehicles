@@ -89,4 +89,4 @@ func setSteering(input):
 	rotate(Vector3(0, 1, 0), deg_to_rad(30 * input))
 
 func animate(delta):
-	instancedModel.rotate(Vector3(1, 0, 0), angularVelocity * delta)
+	instancedModel.rotate_object_local(Vector3(1, 0, 0), -angularVelocity * delta)
