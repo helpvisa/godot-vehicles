@@ -6,9 +6,8 @@
 
 [node name="test_back_left" type="Node3D"]
 script = ExtResource("1_unik3")
-offset = Vector3(-0.65, -0.3, 1.2)
 pacejkaCurve = ExtResource("2_egn3o")
 model = ExtResource("3_nwr3b")
 flipModel = true
-suspensionStrength = 28000.0
+suspensionRange = 0.3
 colMask = 128

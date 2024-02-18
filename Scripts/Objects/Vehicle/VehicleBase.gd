@@ -35,24 +35,21 @@ func _ready():
 		
 		# debug
 		if (wheel.steerable):
-			wheel.setSteering(0.5)
+			wheel.setSteering(0)
 
-func _physics_process(_delta):
-	calculateSuspension()
+func _physics_process(delta):
+	calculateSuspension(delta)
 	calculateWeightTransfer()
-	calculateSteering()
+	#calculateSteering()
 
 # physics functions
-func calculateSuspension():
+func calculateSuspension(delta):
 	for idx in wheels.size():
 		wheels[idx].updateWheelPosition(self)
 		if wheels[idx].isGrounded:
-			var suspensionForce = wheels[idx].calculateSuspensionForce(self)
-			wheels[idx].suspensionForce = suspensionForce.length()
-			wheels[idx].pointVelocity = get_point_velocity(wheels[idx].target)
-			var suspensionDampingForce = wheels[idx].pointVelocity.project(basis.y)
-			suspensionDampingForce *= wheels[idx].suspensionDamping
-			var totalAppliedForce = suspensionForce - suspensionDampingForce
+			var suspensionForce = wheels[idx].calculateSuspensionForce(self, delta)
+			var suspensionDampingForce = wheels[idx].springVelocity * global_basis.y * wheels[idx].suspensionDamping
+			var totalAppliedForce = suspensionForce + suspensionDampingForce
 			apply_force(totalAppliedForce, to_local(wheels[idx].target))
 			# draw debug meshes
 			var tempSuspensionMesh = debugSuspension(\
@@ -66,11 +63,11 @@ func calculateSteering():
 	for idx in wheels.size():
 		if wheels[idx].isGrounded:
 			var flatPlane = Plane(wheels[idx].normal)
-			var planeVelocityAtWheel = flatPlane.project(wheels[idx].pointVelocity)
+			var planeVelocityAtWheel = flatPlane.project(getPointVelocity(wheels[idx].target))
 			var slip = getLateralSlip(planeVelocityAtWheel, idx)
-			var slipForceMultiplier = (slip * wheels[idx].maxDriveForce)
+			#var slipForceMultiplier = (slip * wheels[idx].maxDriveForce)
 			var steeringForce = planeVelocityAtWheel.project(wheels[idx].basis.x)
-			apply_force(-steeringForce * slipForceMultiplier, to_local(wheels[idx].target))
+			apply_force(-steeringForce * 1000, to_local(wheels[idx].target))
 			# draw debug meshes
 			var tempSteeringMesh = debugSteering(\
 				to_local(wheels[idx].target),\
@@ -89,15 +86,15 @@ func calculateWeightTransfer():
 	var totalForce = 0
 	# first find total suspension force
 	for idx in wheels.size():
-		totalForce += wheels[idx].suspensionForce
+		totalForce += wheels[idx].springForce
 	# now use it to find percentage of vehicle's weight being applied at wheel
 	for idx in wheels.size():
-		var percentage = wheels[idx].suspensionForce / totalForce
+		var percentage = wheels[idx].springForce / totalForce
 		wheels[idx].weightAtWheel = mass * percentage
 		wheels[idx].maxDriveForce = wheels[idx].weightAtWheel * 9.8
 
 # custom functions
-func get_point_velocity(point: Vector3) -> Vector3:
+func getPointVelocity(point: Vector3) -> Vector3:
 	return linear_velocity + angular_velocity.cross(point - (global_position + center_of_mass))
 
 # debug functions
