@@ -9,5 +9,4 @@ script = ExtResource("1_unik3")
 pacejkaCurve = ExtResource("2_egn3o")
 model = ExtResource("3_nwr3b")
 flipModel = true
-suspensionRange = 0.3
 colMask = 128

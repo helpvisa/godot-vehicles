@@ -40,7 +40,7 @@ func _ready():
 func _physics_process(delta):
 	calculateSuspension(delta)
 	calculateWeightTransfer()
-	#calculateSteering()
+	calculateSteering()
 
 # physics functions
 func calculateSuspension(delta):

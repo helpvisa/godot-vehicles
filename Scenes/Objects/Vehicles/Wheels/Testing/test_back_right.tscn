@@ -8,5 +8,4 @@
 script = ExtResource("1_4aos4")
 pacejkaCurve = ExtResource("2_dtsiu")
 model = ExtResource("3_ix716")
-suspensionRange = 0.3
 colMask = 128

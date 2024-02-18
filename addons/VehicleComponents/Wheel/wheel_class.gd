@@ -68,7 +68,7 @@ func calculateSuspensionForce(parent, delta) -> Vector3:
 	springForce = suspensionOffset * suspensionStrength
 	springVelocity = (previousSpringLength - springLength) / delta
 	previousSpringLength = springLength
-	return springForce * global_basis.y
+	return springForce * basis.y
 
 func setSteering(input):
 	rotate(Vector3(0, 1, 0), deg_to_rad(30 * input))
