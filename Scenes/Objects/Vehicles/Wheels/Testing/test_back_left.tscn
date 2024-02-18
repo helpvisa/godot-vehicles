@@ -9,4 +9,7 @@ script = ExtResource("1_unik3")
 pacejkaCurve = ExtResource("2_egn3o")
 model = ExtResource("3_nwr3b")
 flipModel = true
+suspensionStrength = 48000.0
+suspensionDamping = 3600.0
+suspensionRange = 0.4
 colMask = 128

@@ -50,7 +50,7 @@ func calculateSuspension(delta):
 			var suspensionForce = wheels[idx].calculateSuspensionForce(self, delta)
 			var suspensionDampingForce = wheels[idx].springVelocity * global_basis.y * wheels[idx].suspensionDamping
 			var totalAppliedForce = suspensionForce + suspensionDampingForce
-			apply_force(totalAppliedForce, to_local(wheels[idx].target))
+			apply_force(totalAppliedForce, wheels[idx].target - global_position)
 			# draw debug meshes
 			var tempSuspensionMesh = debugSuspension(\
 				to_local(wheels[idx].target),\
@@ -65,9 +65,10 @@ func calculateSteering():
 			var flatPlane = Plane(wheels[idx].normal)
 			var planeVelocityAtWheel = flatPlane.project(getPointVelocity(wheels[idx].target))
 			var slip = getLateralSlip(planeVelocityAtWheel, idx)
-			#var slipForceMultiplier = (slip * wheels[idx].maxDriveForce)
+			var slipForceMultiplier = (slip * wheels[idx].maxDriveForce)
 			var steeringForce = planeVelocityAtWheel.project(wheels[idx].basis.x)
-			apply_force(-steeringForce * 1000, to_local(wheels[idx].target))
+			if slipForceMultiplier > 0:
+				apply_force(steeringForce * -slipForceMultiplier, (wheels[idx].target))
 			# draw debug meshes
 			var tempSteeringMesh = debugSteering(\
 				to_local(wheels[idx].target),\
