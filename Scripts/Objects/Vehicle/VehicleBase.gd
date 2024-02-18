@@ -11,6 +11,7 @@ var steeringDebugDisplay: Array[MeshInstance3D]
 @export var suspensionDebugMaterial: StandardMaterial3D
 @export var steeringDebugMaterial: StandardMaterial3D
 
+# local variables
 var input = {
 	"accel": 0.0,
 	"brake": 0.0,
@@ -22,7 +23,7 @@ func _ready():
 	steeringDebugMaterial.no_depth_test = true
 	
 	for wheel in wheels:
-		wheel.initModel()
+		wheel.initModel(self)
 		var tempSuspensionDebugMesh = MeshInstance3D.new()
 		var tempSteeringDebugMesh = MeshInstance3D.new()
 		suspensionDebugDisplay.append(tempSuspensionDebugMesh)
@@ -31,36 +32,69 @@ func _ready():
 		steeringDebugDisplay.append(tempSteeringDebugMesh)
 		steeringDebugDisplay[steeringDebugDisplay.size() - 1].material_override = steeringDebugMaterial
 		add_child(steeringDebugDisplay[steeringDebugDisplay.size() - 1])
+		
+		# debug
+		if (wheel.steerable):
+			wheel.setSteering(0.5)
 
 func _physics_process(_delta):
+	calculateSuspension()
+	calculateWeightTransfer()
+	calculateSteering()
+
+# physics functions
+func calculateSuspension():
 	for idx in wheels.size():
 		wheels[idx].updateWheelPosition(self)
-		# calculate suspension forces and apply them to the rigidbody
 		if wheels[idx].isGrounded:
 			var suspensionForce = wheels[idx].calculateSuspensionForce(self)
-			var wheelPointVelocity = get_point_velocity(wheels[idx].target)
-			var suspensionDampingForce = wheelPointVelocity.project(basis.y)
+			wheels[idx].suspensionForce = suspensionForce.length()
+			wheels[idx].pointVelocity = get_point_velocity(wheels[idx].target)
+			var suspensionDampingForce = wheels[idx].pointVelocity.project(basis.y)
 			suspensionDampingForce *= wheels[idx].suspensionDamping
 			var totalAppliedForce = suspensionForce - suspensionDampingForce
-			apply_force(totalAppliedForce, wheels[idx].position)
+			apply_force(totalAppliedForce, to_local(wheels[idx].target))
 			# draw debug meshes
 			var tempSuspensionMesh = debugSuspension(\
-				wheels[idx].position,\
-				wheels[idx].position + totalAppliedForce/1000)
+				to_local(wheels[idx].target),\
+				to_local(wheels[idx].target) + totalAppliedForce/1000)
 			suspensionDebugDisplay[idx].mesh = tempSuspensionMesh
-			# apply steering forces
-			var flatPlane = Plane(wheels[idx].normal)
-			var planeVelocityAtWheel = flatPlane.project(wheelPointVelocity)
-			var steeringForce = planeVelocityAtWheel.project(wheels[idx].basis.x)
-			apply_force(-steeringForce * 1000, wheels[idx].position)
-			# draw debug meshes
-			var tempSteeringMesh = debugSteering(\
-				wheels[idx].position,\
-				wheels[idx].position - steeringForce)
-			steeringDebugDisplay[idx].mesh = tempSteeringMesh
 		else:
 			suspensionDebugDisplay[idx].mesh = null
+
+func calculateSteering():
+	for idx in wheels.size():
+		if wheels[idx].isGrounded:
+			var flatPlane = Plane(wheels[idx].normal)
+			var planeVelocityAtWheel = flatPlane.project(wheels[idx].pointVelocity)
+			var slip = getLateralSlip(planeVelocityAtWheel, idx)
+			var slipForceMultiplier = (slip * wheels[idx].maxDriveForce)
+			var steeringForce = planeVelocityAtWheel.project(wheels[idx].basis.x)
+			apply_force(-steeringForce * slipForceMultiplier, to_local(wheels[idx].target))
+			# draw debug meshes
+			var tempSteeringMesh = debugSteering(\
+				to_local(wheels[idx].target),\
+				to_local(wheels[idx].target) - steeringForce)
+			steeringDebugDisplay[idx].mesh = tempSteeringMesh
+		else:
 			steeringDebugDisplay[idx].mesh = null
+
+func getLateralSlip(planeVelocity, idx) -> float:
+	var forwardVelocity = planeVelocity.project(wheels[idx].basis.z)
+	var slipAngle = rad_to_deg(planeVelocity.angle_to(forwardVelocity))
+	wheels[idx].slip = wheels[idx].pacejkaCurve.sample_baked(slipAngle / 20) # 20 degrees = max slip angle
+	return wheels[idx].slip
+
+func calculateWeightTransfer():
+	var totalForce = 0
+	# first find total suspension force
+	for idx in wheels.size():
+		totalForce += wheels[idx].suspensionForce
+	# now use it to find percentage of vehicle's weight being applied at wheel
+	for idx in wheels.size():
+		var percentage = wheels[idx].suspensionForce / totalForce
+		wheels[idx].weightAtWheel = mass * percentage
+		wheels[idx].maxDriveForce = wheels[idx].weightAtWheel * 9.8
 
 # custom functions
 func get_point_velocity(point: Vector3) -> Vector3:
