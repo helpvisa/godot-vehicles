@@ -39,16 +39,15 @@ func _ready():
 		accelerationDebugDisplay.append(tempAccelerationDebugMesh)
 		accelerationDebugDisplay[accelerationDebugDisplay.size() - 1].material_override = accelerationDebugMaterial
 		add_child(accelerationDebugDisplay[accelerationDebugDisplay.size() - 1])
-		
-		# debug
-		if (wheel.steerable):
-			wheel.setSteering(0)
 
 func _physics_process(delta):
 	calculateSuspension(delta)
 	calculateWeightTransfer()
 	calculateAcceleration(delta)
 	calculateSteering()
+
+func _process(_delta):
+	updateSteering()
 
 # physics functions
 func calculateSuspension(delta):
@@ -119,9 +118,14 @@ func calculateWeightTransfer():
 		wheels[idx].weightAtWheel = mass * percentage
 		wheels[idx].maxDriveForce = wheels[idx].weightAtWheel * 9.8
 
-# custom functions
 func getPointVelocity(point: Vector3) -> Vector3:
 	return linear_velocity + angular_velocity.cross(point - (global_position + center_of_mass))
+
+# input functions
+func updateSteering():
+	for wheel in wheels:
+		if wheel.steerable:
+			wheel.setSteering(input.steer)
 
 # debug functions
 func debugSuspension(pos1, pos2) -> ImmediateMesh:

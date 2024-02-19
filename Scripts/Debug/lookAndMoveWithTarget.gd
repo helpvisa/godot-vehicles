@@ -11,5 +11,5 @@ func _process(delta):
 		look_at(target.global_position)
 		if target.global_position.distance_squared_to(global_position) > 300:
 			var movement = (target.global_position - global_position)
-			moveTarget += movement.normalized() * 0.1
+			moveTarget += movement.normalized() * 5 * delta
 		global_position = global_position.lerp(moveTarget, delta)

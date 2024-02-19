@@ -1,4 +1,4 @@
-[gd_scene load_steps=16 format=3 uid="uid://m0vo372ghciq"]
+[gd_scene load_steps=17 format=3 uid="uid://m0vo372ghciq"]
 
 [ext_resource type="Script" path="res://Scripts/Objects/Vehicle/VehicleBase.gd" id="1_rv6nq"]
 [ext_resource type="Resource" uid="uid://2odx3nsbk75e" path="res://Resources/Engines/base_engine.tres" id="2_8x85s"]
@@ -7,6 +7,7 @@
 [ext_resource type="PackedScene" uid="uid://cq0vnqwols35p" path="res://Scenes/Objects/Vehicles/Wheels/Testing/test_back_right.tscn" id="5_yjfsj"]
 [ext_resource type="PackedScene" uid="uid://ddj7mtns71vl6" path="res://Scenes/Objects/Vehicles/Wheels/Testing/test_front_left.tscn" id="6_60425"]
 [ext_resource type="PackedScene" uid="uid://dmq73b1rxgf24" path="res://Scenes/Objects/Vehicles/Wheels/Testing/test_front_right.tscn" id="7_ahsy3"]
+[ext_resource type="Script" path="res://Scripts/Controllers/SteeringController.gd" id="8_p1nep"]
 
 [sub_resource type="PhysicsMaterial" id="PhysicsMaterial_raasi"]
 friction = 0.75
@@ -81,3 +82,6 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.6, -0.5, -1.2)
 
 [node name="test_front_right" parent="Wheels" instance=ExtResource("7_ahsy3")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.6, -0.5, -1.2)
+
+[node name="Node" type="Node" parent="."]
+script = ExtResource("8_p1nep")

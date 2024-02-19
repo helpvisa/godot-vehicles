@@ -16,6 +16,7 @@ extends Node3D
 @export_flags_3d_physics var colMask
 
 # local
+var baseRotation: Vector3 = Vector3.ZERO
 var offset: Vector3 = Vector3.ZERO
 var target: Vector3 = Vector3.ZERO
 var normal: Vector3 = Vector3.ZERO
@@ -46,6 +47,7 @@ func initModel(parent):
 			instancedModel.rotate(Vector3(0, 1, 0), deg_to_rad(180))
 		add_child(instancedModel)
 	offset = position
+	baseRotation = rotation
 	maxDriveForce = parent.mass * 9.8
 
 func updateWheelPosition(parent, delta):
@@ -86,7 +88,7 @@ func applyRollingResistance(delta):
 		angularVelocity += rollingResistance * delta
 
 func setSteering(input):
-	rotate(Vector3(0, 1, 0), deg_to_rad(30 * input))
+	rotation = baseRotation + Vector3(0, deg_to_rad(30 * input), 0)
 
 func animate(delta):
 	instancedModel.rotate_object_local(Vector3(1, 0, 0), -angularVelocity * delta)
