@@ -1,9 +1,9 @@
 extends Node
 
-@export var steerSpeed: float = 10
+@export var steerSpeed: float = 5
 
 var parentVehicle: RigidBody3D
-var steering = 0;
+var steering: float = 0;
 
 func _ready():
 	parentVehicle = get_parent()
@@ -18,18 +18,12 @@ func gatherInput(delta):
 	# keyboard
 	if Input.is_action_pressed("steer_left_key"):
 		inputActive = true
-		steering -= steerSpeed * delta
+		steering = lerp(steering, 1.0, steerSpeed * delta)
 	if Input.is_action_pressed("steer_right_key"):
 		inputActive = true
-		steering += steerSpeed * delta
+		steering = lerp(steering, -1.0, steerSpeed * delta)
 	if !inputActive:
-		var sign = sign(steering)
-		if sign > 0:
-			steering -= steerSpeed * delta
-		else:
-			steering += steerSpeed * delta
-	if abs(steering) < 0.01:
-		steering = 0
+		steering = lerp(steering, 0.0, steerSpeed * delta)
 	
 	steering = clamp(steering, -1, 1)
 	# joypad
