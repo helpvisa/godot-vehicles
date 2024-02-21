@@ -1,6 +1,6 @@
 extends Node
 
-@export var steerSpeed: float = 5
+@export var steerSpeed: float = 2
 
 var parentVehicle: RigidBody3D
 var steering: float = 0
