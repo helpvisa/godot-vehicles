@@ -79,7 +79,7 @@ func calculateAcceleration(delta):
 			if (wheels[idx].powered):
 				var debugAccel = Input.get_action_strength("accelerate")
 				debugAccel -= Input.get_action_strength("brake")
-				apply_force(debugAccel * -wheels[idx].global_basis.z * 5000, wheels[idx].target - global_position)
+				apply_force(debugAccel * -wheels[idx].global_basis.z * 3000, wheels[idx].target - global_position)
 				# draw debug meshes
 				var tempAccelerationMesh = debugAcceleration(\
 				to_local(wheels[idx].target),\
@@ -94,11 +94,11 @@ func calculateAcceleration(delta):
 func calculateSteering():
 	for idx in wheels.size():
 		if wheels[idx].isGrounded:
-			var slip = getLateralSlip(wheels[idx].pointVelocity, idx)
+			var slip = getLateralSlip(wheels[idx].pointVelocity, idx, 20)
 			var steeringForce = wheels[idx].pointVelocity.project(wheels[idx].global_basis.x)
 			# we want to zero the forces (ideal grip), then use slip to adjust how strong they are
 			var maxDriveForce = max(wheels[idx].maxDriveForce, 0)
-			var multiplier = (maxDriveForce * slip) / wheels[idx].radius
+			var multiplier = ((mass * 9.8) * slip) / wheels[idx].radius
 			var percentageApplied = 0
 			if maxDriveForce > 0:
 				percentageApplied = maxDriveForce / (multiplier * wheels[idx].radius)
@@ -108,15 +108,14 @@ func calculateSteering():
 			# draw debug meshes
 			var tempSteeringMesh = debugSteering(\
 				to_local(wheels[idx].target),\
-				to_local(wheels[idx].target - steeringForce))
+				to_local(wheels[idx].target + (steeringForce * -multiplier) / 10000))
 			steeringDebugDisplay[idx].mesh = tempSteeringMesh
 		else:
 			steeringDebugDisplay[idx].mesh = null
 
-func getLateralSlip(planeVelocity, idx, maxAngle = 1) -> float:
-	var forwardVelocity = planeVelocity.project(wheels[idx].basis.z)
-	var wheelVelocity = planeVelocity.project(wheels[idx].basis.x)
-	var slipAngle = rad_to_deg(wheelVelocity.angle_to(forwardVelocity))
+func getLateralSlip(planeVelocity, idx, maxAngle = 180) -> float:
+	var wheelVelocity = planeVelocity.project(wheels[idx].basis.x).normalized()
+	var slipAngle = rad_to_deg(wheelVelocity.angle_to(planeVelocity.normalized()))
 	wheels[idx].slip = wheels[idx].pacejkaCurve.sample_baked(slipAngle / maxAngle) # divide for max slip angle
 	return wheels[idx].slip
 

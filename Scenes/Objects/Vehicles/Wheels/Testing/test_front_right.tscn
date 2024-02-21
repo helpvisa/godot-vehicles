@@ -9,6 +9,7 @@ script = ExtResource("1_hxnx4")
 pacejkaCurve = ExtResource("2_5wat1")
 model = ExtResource("3_n17nk")
 suspensionStrength = 30000.0
+suspensionDamping = 3600.0
 suspensionRange = 0.5
 powered = false
 steerable = true
