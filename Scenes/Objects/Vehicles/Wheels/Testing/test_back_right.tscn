@@ -10,5 +10,5 @@ pacejkaCurve = ExtResource("2_dtsiu")
 model = ExtResource("3_ix716")
 suspensionStrength = 48000.0
 suspensionDamping = 3600.0
-suspensionRange = 0.4
+suspensionRange = 0.5
 colMask = 128

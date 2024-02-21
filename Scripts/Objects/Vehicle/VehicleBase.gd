@@ -78,14 +78,17 @@ func calculateAcceleration(delta):
 				wheels[idx].angularVelocity *= -1
 			if (wheels[idx].powered):
 				var debugAccel = Input.get_action_strength("accelerate")
+				debugAccel -= Input.get_action_strength("brake")
 				apply_force(debugAccel * -wheels[idx].global_basis.z * 10000, wheels[idx].target - global_position)
+				# draw debug meshes
+				var tempAccelerationMesh = debugAcceleration(\
+				to_local(wheels[idx].target),\
+				to_local(wheels[idx].target + debugAccel * -wheels[idx].global_basis.z))
+				accelerationDebugDisplay[idx].mesh = tempAccelerationMesh
 		else:
 			wheels[idx].applyRollingResistance(delta)
-		# draw debug meshes
-		var tempAccelerationMesh = debugAcceleration(\
-			to_local(wheels[idx].target),\
-			to_local(wheels[idx].target + wheels[idx].forwardVelocity))
-		accelerationDebugDisplay[idx].mesh = tempAccelerationMesh
+			accelerationDebugDisplay[idx].mesh = null
+		
 		wheels[idx].animate(delta)
 
 func calculateSteering():
@@ -93,9 +96,12 @@ func calculateSteering():
 		if wheels[idx].isGrounded:
 			var slip = getLateralSlip(wheels[idx].pointVelocity, idx)
 			var steeringForce = wheels[idx].pointVelocity.project(wheels[idx].global_basis.x)
-			# we want to zero the forces, then use slip to adjust how strong they are (ideal grip)
-			var slipForceMultiplier = -1 * slip
-			apply_force(steeringForce * ((mass * 9.8) * slipForceMultiplier), wheels[idx].target - global_position)
+			# we want to zero the forces (ideal grip), then use slip to adjust how strong they are
+			var finalMultiplier = (mass * 9.8) * slip
+			var percentageApplied = wheels[idx].maxDriveForce / finalMultiplier
+			finalMultiplier *= percentageApplied
+			if finalMultiplier > 0:
+				apply_force(steeringForce * -finalMultiplier, wheels[idx].target - global_position)
 			# draw debug meshes
 			var tempSteeringMesh = debugSteering(\
 				to_local(wheels[idx].target),\
