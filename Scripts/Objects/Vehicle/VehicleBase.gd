@@ -112,7 +112,9 @@ func calculateSteering():
 			var steeringForce = wheels[idx].steeringVelocity
 			var slip = getLateralSlip(wheels[idx].pointVelocity, steeringForce, idx)
 			var maxDriveForce = max(wheels[idx].maxDriveForce, 0)
-			var multiplier = pacejka_test(maxDriveForce, slip)
+			var multiplier = 0
+			if wheels[idx].tire:
+				multiplier = wheels[idx].tire.calcForce(maxDriveForce, slip)
 			if steeringForce.length() > 1:
 				steeringForce = steeringForce.normalized()
 			if multiplier > 0:

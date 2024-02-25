@@ -2,6 +2,7 @@
 extends Node3D
 
 # public / settable
+@export var tire: Resource
 @export var model: PackedScene
 @export var flipModel: bool = false
 @export var radius: float = 0.33
@@ -46,6 +47,7 @@ var previousAngularVelocity: float = 0
 func initModel(parent):
 	if model:
 		instancedModel = model.instantiate()
+		instancedModel.scale *= radius
 		if flipModel:
 			instancedModel.rotate(Vector3(0, 1, 0), deg_to_rad(180))
 		add_child(instancedModel)

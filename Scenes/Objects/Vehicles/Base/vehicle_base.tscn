@@ -1,9 +1,10 @@
-[gd_scene load_steps=17 format=3 uid="uid://m0vo372ghciq"]
+[gd_scene load_steps=18 format=3 uid="uid://m0vo372ghciq"]
 
 [ext_resource type="Script" path="res://Scripts/Objects/Vehicle/VehicleBase.gd" id="1_rv6nq"]
 [ext_resource type="Resource" uid="uid://2odx3nsbk75e" path="res://Resources/Engines/base_engine.tres" id="2_8x85s"]
 [ext_resource type="Resource" uid="uid://bd2ebcnarl2c" path="res://Resources/Transmissions/base_transmission.tres" id="3_d37vi"]
 [ext_resource type="PackedScene" uid="uid://di60ndesnskpv" path="res://Scenes/Objects/Vehicles/Wheels/Testing/test_back_left.tscn" id="4_3tn5c"]
+[ext_resource type="Resource" uid="uid://dnv2k222voql" path="res://Resources/Tires/standard_tarmac.tres" id="5_or7w5"]
 [ext_resource type="PackedScene" uid="uid://cq0vnqwols35p" path="res://Scenes/Objects/Vehicles/Wheels/Testing/test_back_right.tscn" id="5_yjfsj"]
 [ext_resource type="PackedScene" uid="uid://ddj7mtns71vl6" path="res://Scenes/Objects/Vehicles/Wheels/Testing/test_front_left.tscn" id="6_60425"]
 [ext_resource type="PackedScene" uid="uid://dmq73b1rxgf24" path="res://Scenes/Objects/Vehicles/Wheels/Testing/test_front_right.tscn" id="7_ahsy3"]
@@ -73,15 +74,19 @@ shape = SubResource("BoxShape3D_terl1")
 
 [node name="test_back_left" parent="Wheels" instance=ExtResource("4_3tn5c")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.75, -0.5, 1.2)
+tire = ExtResource("5_or7w5")
 
 [node name="test_back_right" parent="Wheels" instance=ExtResource("5_yjfsj")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.75, -0.5, 1.2)
+tire = ExtResource("5_or7w5")
 
 [node name="test_front_left" parent="Wheels" instance=ExtResource("6_60425")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.75, -0.5, -1.2)
+tire = ExtResource("5_or7w5")
 
 [node name="test_front_right" parent="Wheels" instance=ExtResource("7_ahsy3")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.75, -0.5, -1.2)
+tire = ExtResource("5_or7w5")
 
 [node name="SteeringController" type="Node" parent="."]
 script = ExtResource("8_p1nep")
