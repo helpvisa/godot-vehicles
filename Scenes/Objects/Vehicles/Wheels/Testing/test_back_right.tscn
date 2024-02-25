@@ -1,14 +1,11 @@
-[gd_scene load_steps=4 format=3 uid="uid://cq0vnqwols35p"]
+[gd_scene load_steps=3 format=3 uid="uid://cq0vnqwols35p"]
 
-[ext_resource type="Script" path="res://addons/VehicleComponents/Wheel/wheel_class.gd" id="1_4aos4"]
-[ext_resource type="Curve" uid="uid://dy50co58yq8db" path="res://Resources/Curves/Tires/standard_tarmac.tres" id="2_dtsiu"]
+[ext_resource type="Script" path="res://Scripts/Vehicle/wheel.gd" id="1_pikvs"]
 [ext_resource type="PackedScene" uid="uid://fvpsqqg71i87" path="res://Models/Wheels/test_wheel.glb" id="3_ix716"]
 
 [node name="test_back_right" type="Node3D"]
-script = ExtResource("1_4aos4")
-pacejkaCurve = ExtResource("2_dtsiu")
+script = ExtResource("1_pikvs")
 model = ExtResource("3_ix716")
-suspensionStrength = 32000.0
-suspensionDamping = 2400.0
-suspensionRange = 0.5
+suspensionStrength = 26000.0
+suspensionDamping = 2200.0
 colMask = 128

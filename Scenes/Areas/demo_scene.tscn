@@ -1,7 +1,8 @@
-[gd_scene load_steps=14 format=3 uid="uid://dbo4xbtrx3l45"]
+[gd_scene load_steps=18 format=3 uid="uid://dbo4xbtrx3l45"]
 
 [ext_resource type="Script" path="res://Scripts/Debug/lookAndMoveWithTarget.gd" id="1_wba5p"]
 [ext_resource type="PackedScene" uid="uid://m0vo372ghciq" path="res://Scenes/Objects/Vehicles/Base/vehicle_base.tscn" id="2_bg7rd"]
+[ext_resource type="Script" path="res://Scripts/Debug/rigidbodyGroundTester.gd" id="3_0g4nd"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_ssdc5"]
 sky_horizon_color = Color(0.627451, 0.658824, 0.678431, 1)
@@ -33,15 +34,23 @@ size = Vector3(50, 2, 1)
 height = 100.0
 radius = 4.0
 
-[sub_resource type="CylinderShape3D" id="CylinderShape3D_2kaln"]
-height = 100.0
-radius = 2.0
-
 [sub_resource type="BoxShape3D" id="BoxShape3D_4pvjb"]
 size = Vector3(10, 10, 10)
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_7og43"]
 size = Vector3(500, 1, 500)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_6ck0y"]
+size = Vector3(20, 1, 20)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_so36g"]
+size = Vector3(10, 1, 10)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_twkyj"]
+size = Vector3(5, 1, 5)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_a2xfq"]
+size = Vector3(5, 0.2, 10)
 
 [node name="Node3D" type="Node3D"]
 
@@ -55,7 +64,7 @@ directional_shadow_blend_splits = true
 directional_shadow_max_distance = 500.0
 
 [node name="VehicleBody" parent="." instance=ExtResource("2_bg7rd")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 0.999999, 0, 5, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3, 0)
 
 [node name="ChaseCam" type="Node3D" parent="." node_paths=PackedStringArray("target")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 5, 0)
@@ -69,7 +78,7 @@ size = 20.0
 [node name="SpeedBumps" type="Node3D" parent="."]
 
 [node name="CSGBox3D2" type="CSGBox3D" parent="SpeedBumps"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.22944, -10)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.372474, -10)
 material_override = SubResource("StandardMaterial3D_ewggr")
 size = Vector3(50, 2, 1)
 
@@ -80,7 +89,7 @@ collision_layer = 129
 shape = SubResource("BoxShape3D_mdiys")
 
 [node name="CSGBox3D3" type="CSGBox3D" parent="SpeedBumps"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.22944, -12)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.372474, -12)
 material_override = SubResource("StandardMaterial3D_ewggr")
 size = Vector3(50, 2, 1)
 
@@ -91,7 +100,7 @@ collision_layer = 129
 shape = SubResource("BoxShape3D_mdiys")
 
 [node name="CSGBox3D4" type="CSGBox3D" parent="SpeedBumps"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.22944, -14)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.372474, -14)
 material_override = SubResource("StandardMaterial3D_ewggr")
 size = Vector3(50, 2, 1)
 
@@ -102,7 +111,7 @@ collision_layer = 129
 shape = SubResource("BoxShape3D_mdiys")
 
 [node name="CSGBox3D5" type="CSGBox3D" parent="SpeedBumps"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.22944, -16)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.372474, -16)
 material_override = SubResource("StandardMaterial3D_ewggr")
 size = Vector3(50, 2, 1)
 
@@ -113,7 +122,7 @@ collision_layer = 129
 shape = SubResource("BoxShape3D_mdiys")
 
 [node name="CSGBox3D6" type="CSGBox3D" parent="SpeedBumps"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.22944, -18)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.372474, -18)
 material_override = SubResource("StandardMaterial3D_ewggr")
 size = Vector3(50, 2, 1)
 
@@ -124,7 +133,7 @@ collision_layer = 129
 shape = SubResource("BoxShape3D_mdiys")
 
 [node name="CSGBox3D7" type="CSGBox3D" parent="SpeedBumps"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.22944, -20)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.372474, -20)
 material_override = SubResource("StandardMaterial3D_ewggr")
 size = Vector3(50, 2, 1)
 
@@ -135,7 +144,7 @@ collision_layer = 129
 shape = SubResource("BoxShape3D_mdiys")
 
 [node name="CSGBox3D8" type="CSGBox3D" parent="SpeedBumps"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.22944, -22)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.372474, -22)
 material_override = SubResource("StandardMaterial3D_ewggr")
 size = Vector3(50, 2, 1)
 
@@ -146,7 +155,7 @@ collision_layer = 129
 shape = SubResource("BoxShape3D_mdiys")
 
 [node name="CSGBox3D9" type="CSGBox3D" parent="SpeedBumps"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.22944, -24)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.372474, -24)
 material_override = SubResource("StandardMaterial3D_ewggr")
 size = Vector3(50, 2, 1)
 
@@ -157,7 +166,7 @@ collision_layer = 129
 shape = SubResource("BoxShape3D_mdiys")
 
 [node name="CSGBox3D10" type="CSGBox3D" parent="SpeedBumps"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.22944, -26)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.372474, -26)
 material_override = SubResource("StandardMaterial3D_ewggr")
 size = Vector3(50, 2, 1)
 
@@ -168,7 +177,7 @@ collision_layer = 129
 shape = SubResource("BoxShape3D_mdiys")
 
 [node name="CSGBox3D11" type="CSGBox3D" parent="SpeedBumps"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.22944, -28)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.372474, -28)
 material_override = SubResource("StandardMaterial3D_ewggr")
 size = Vector3(50, 2, 1)
 
@@ -178,92 +187,128 @@ collision_layer = 129
 [node name="CollisionShape3D" type="CollisionShape3D" parent="SpeedBumps/CSGBox3D11/StaticBody3D"]
 shape = SubResource("BoxShape3D_mdiys")
 
-[node name="CSGCylinder3D" type="CSGCylinder3D" parent="."]
-transform = Transform3D(-4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0, 0, 1, 0, -2.87308, 28.0245)
+[node name="CSGCylinder3D" type="CSGCylinder3D" parent="SpeedBumps"]
+transform = Transform3D(-4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0, 0, 1, 0, -3.21149, 28.0245)
 radius = 4.0
 height = 100.0
 sides = 32
 
-[node name="StaticBody3D" type="StaticBody3D" parent="CSGCylinder3D"]
+[node name="StaticBody3D" type="StaticBody3D" parent="SpeedBumps/CSGCylinder3D"]
 collision_layer = 129
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="CSGCylinder3D/StaticBody3D"]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="SpeedBumps/CSGCylinder3D/StaticBody3D"]
 shape = SubResource("CylinderShape3D_jdipa")
 
-[node name="CSGCylinder3D2" type="CSGCylinder3D" parent="."]
-transform = Transform3D(-4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0, 0, 1, 0, -1.22287, 39.8909)
-radius = 2.0
+[node name="CSGCylinder3D2" type="CSGCylinder3D" parent="SpeedBumps"]
+transform = Transform3D(-4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0, 0, 1, 0, -3.21149, 32.0245)
+radius = 4.0
 height = 100.0
 sides = 32
 
-[node name="StaticBody3D" type="StaticBody3D" parent="CSGCylinder3D2"]
+[node name="StaticBody3D" type="StaticBody3D" parent="SpeedBumps/CSGCylinder3D2"]
 collision_layer = 129
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="CSGCylinder3D2/StaticBody3D"]
-shape = SubResource("CylinderShape3D_2kaln")
+[node name="CollisionShape3D" type="CollisionShape3D" parent="SpeedBumps/CSGCylinder3D2/StaticBody3D"]
+shape = SubResource("CylinderShape3D_jdipa")
 
-[node name="CSGCylinder3D3" type="CSGCylinder3D" parent="."]
-transform = Transform3D(-4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0, 0, 1, 0, -1.22287, 44.4623)
-radius = 2.0
+[node name="CSGCylinder3D3" type="CSGCylinder3D" parent="SpeedBumps"]
+transform = Transform3D(-4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0, 0, 1, 0, -3.21149, 36.0245)
+radius = 4.0
 height = 100.0
 sides = 32
 
-[node name="StaticBody3D" type="StaticBody3D" parent="CSGCylinder3D3"]
+[node name="StaticBody3D" type="StaticBody3D" parent="SpeedBumps/CSGCylinder3D3"]
 collision_layer = 129
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="CSGCylinder3D3/StaticBody3D"]
-shape = SubResource("CylinderShape3D_2kaln")
+[node name="CollisionShape3D" type="CollisionShape3D" parent="SpeedBumps/CSGCylinder3D3/StaticBody3D"]
+shape = SubResource("CylinderShape3D_jdipa")
 
-[node name="CSGCylinder3D4" type="CSGCylinder3D" parent="."]
-transform = Transform3D(-4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0, 0, 1, 0, -1.22287, 49.2984)
-radius = 2.0
+[node name="CSGCylinder3D4" type="CSGCylinder3D" parent="SpeedBumps"]
+transform = Transform3D(-4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0, 0, 1, 0, -3.21149, 40.0245)
+radius = 4.0
 height = 100.0
 sides = 32
 
-[node name="StaticBody3D" type="StaticBody3D" parent="CSGCylinder3D4"]
+[node name="StaticBody3D" type="StaticBody3D" parent="SpeedBumps/CSGCylinder3D4"]
 collision_layer = 129
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="CSGCylinder3D4/StaticBody3D"]
-shape = SubResource("CylinderShape3D_2kaln")
+[node name="CollisionShape3D" type="CollisionShape3D" parent="SpeedBumps/CSGCylinder3D4/StaticBody3D"]
+shape = SubResource("CylinderShape3D_jdipa")
 
-[node name="CSGCylinder3D5" type="CSGCylinder3D" parent="."]
-transform = Transform3D(-4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0, 0, 1, 0, -1.22287, 54.3813)
-radius = 2.0
+[node name="CSGCylinder3D5" type="CSGCylinder3D" parent="SpeedBumps"]
+transform = Transform3D(-4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0, 0, 1, 0, -3.21149, 44.0245)
+radius = 4.0
 height = 100.0
 sides = 32
 
-[node name="StaticBody3D" type="StaticBody3D" parent="CSGCylinder3D5"]
+[node name="StaticBody3D" type="StaticBody3D" parent="SpeedBumps/CSGCylinder3D5"]
 collision_layer = 129
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="CSGCylinder3D5/StaticBody3D"]
-shape = SubResource("CylinderShape3D_2kaln")
+[node name="CollisionShape3D" type="CollisionShape3D" parent="SpeedBumps/CSGCylinder3D5/StaticBody3D"]
+shape = SubResource("CylinderShape3D_jdipa")
 
-[node name="CSGCylinder3D6" type="CSGCylinder3D" parent="."]
-transform = Transform3D(-4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0, 0, 1, 0, -1.22287, 59.8925)
-radius = 2.0
+[node name="CSGCylinder3D6" type="CSGCylinder3D" parent="SpeedBumps"]
+transform = Transform3D(-4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0, 0, 1, 0, -3.21149, 48.0245)
+radius = 4.0
 height = 100.0
 sides = 32
 
-[node name="StaticBody3D" type="StaticBody3D" parent="CSGCylinder3D6"]
+[node name="StaticBody3D" type="StaticBody3D" parent="SpeedBumps/CSGCylinder3D6"]
 collision_layer = 129
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="CSGCylinder3D6/StaticBody3D"]
-shape = SubResource("CylinderShape3D_2kaln")
+[node name="CollisionShape3D" type="CollisionShape3D" parent="SpeedBumps/CSGCylinder3D6/StaticBody3D"]
+shape = SubResource("CylinderShape3D_jdipa")
 
-[node name="CSGCylinder3D7" type="CSGCylinder3D" parent="."]
-transform = Transform3D(-4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0, 0, 1, 0, -1.22287, 64.9705)
-radius = 2.0
+[node name="CSGCylinder3D7" type="CSGCylinder3D" parent="SpeedBumps"]
+transform = Transform3D(-4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0, 0, 1, 0, -3.21149, 52.0245)
+radius = 4.0
 height = 100.0
 sides = 32
 
-[node name="StaticBody3D" type="StaticBody3D" parent="CSGCylinder3D7"]
+[node name="StaticBody3D" type="StaticBody3D" parent="SpeedBumps/CSGCylinder3D7"]
 collision_layer = 129
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="CSGCylinder3D7/StaticBody3D"]
-shape = SubResource("CylinderShape3D_2kaln")
+[node name="CollisionShape3D" type="CollisionShape3D" parent="SpeedBumps/CSGCylinder3D7/StaticBody3D"]
+shape = SubResource("CylinderShape3D_jdipa")
+
+[node name="CSGCylinder3D8" type="CSGCylinder3D" parent="SpeedBumps"]
+transform = Transform3D(-4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0, 0, 1, 0, -3.21149, 56.0245)
+radius = 4.0
+height = 100.0
+sides = 32
+
+[node name="StaticBody3D" type="StaticBody3D" parent="SpeedBumps/CSGCylinder3D8"]
+collision_layer = 129
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="SpeedBumps/CSGCylinder3D8/StaticBody3D"]
+shape = SubResource("CylinderShape3D_jdipa")
+
+[node name="CSGCylinder3D9" type="CSGCylinder3D" parent="SpeedBumps"]
+transform = Transform3D(-4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0, 0, 1, 0, -3.21149, 60.0245)
+radius = 4.0
+height = 100.0
+sides = 32
+
+[node name="StaticBody3D" type="StaticBody3D" parent="SpeedBumps/CSGCylinder3D9"]
+collision_layer = 129
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="SpeedBumps/CSGCylinder3D9/StaticBody3D"]
+shape = SubResource("CylinderShape3D_jdipa")
+
+[node name="CSGCylinder3D10" type="CSGCylinder3D" parent="SpeedBumps"]
+transform = Transform3D(-4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0, 0, 1, 0, -3.21149, 64.0245)
+radius = 4.0
+height = 100.0
+sides = 32
+
+[node name="StaticBody3D" type="StaticBody3D" parent="SpeedBumps/CSGCylinder3D10"]
+collision_layer = 129
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="SpeedBumps/CSGCylinder3D10/StaticBody3D"]
+shape = SubResource("CylinderShape3D_jdipa")
 
 [node name="CSGBox3D2" type="CSGBox3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 0.707107, 0.707107, 0, -0.707107, 0.707107, 51.8111, -2, -49.1495)
+transform = Transform3D(1, 0, 0, 0, 0.258819, 0.965926, 0, -0.965926, 0.258819, 51.8111, -3.16953, -49.1495)
 size = Vector3(10, 10, 10)
 
 [node name="StaticBody3D" type="StaticBody3D" parent="CSGBox3D2"]
@@ -272,12 +317,76 @@ collision_layer = 129
 [node name="CollisionShape3D" type="CollisionShape3D" parent="CSGBox3D2/StaticBody3D"]
 shape = SubResource("BoxShape3D_4pvjb")
 
-[node name="CSGBox3D" type="CSGBox3D" parent="."]
+[node name="Ground" type="CSGBox3D" parent="."]
 material_override = SubResource("StandardMaterial3D_ewggr")
 size = Vector3(500, 1, 500)
 
-[node name="StaticBody3D" type="StaticBody3D" parent="CSGBox3D"]
+[node name="StaticBody3D" type="StaticBody3D" parent="Ground"]
 collision_layer = 129
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="CSGBox3D/StaticBody3D"]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Ground/StaticBody3D"]
 shape = SubResource("BoxShape3D_7og43")
+
+[node name="Ground3" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 0.866025, -0.5, 0, 0.5, 0.866025, 0, 0, -127.708)
+material_override = SubResource("StandardMaterial3D_ewggr")
+size = Vector3(500, 1, 500)
+
+[node name="StaticBody3D" type="StaticBody3D" parent="Ground3"]
+collision_layer = 129
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Ground3/StaticBody3D"]
+shape = SubResource("BoxShape3D_7og43")
+
+[node name="Ground2" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 0.965926, 0.258819, 0, -0.258819, 0.965926, 0, 0, 92)
+material_override = SubResource("StandardMaterial3D_ewggr")
+size = Vector3(500, 1, 500)
+
+[node name="StaticBody3D" type="StaticBody3D" parent="Ground2"]
+collision_layer = 129
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Ground2/StaticBody3D"]
+shape = SubResource("BoxShape3D_7og43")
+
+[node name="CSGBox3D3" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -78.2361, 0.142642, 0)
+size = Vector3(20, 1, 20)
+
+[node name="StaticBody3D" type="StaticBody3D" parent="CSGBox3D3"]
+collision_layer = 129
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="CSGBox3D3/StaticBody3D"]
+shape = SubResource("BoxShape3D_6ck0y")
+
+[node name="CSGBox3D4" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -78.2361, 0.305169, 0)
+size = Vector3(10, 1, 10)
+
+[node name="StaticBody3D" type="StaticBody3D" parent="CSGBox3D4"]
+collision_layer = 129
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="CSGBox3D4/StaticBody3D"]
+shape = SubResource("BoxShape3D_so36g")
+
+[node name="CSGBox3D5" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -78.2361, 0.481997, 0)
+size = Vector3(5, 1, 5)
+
+[node name="StaticBody3D" type="StaticBody3D" parent="CSGBox3D5"]
+collision_layer = 129
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="CSGBox3D5/StaticBody3D"]
+shape = SubResource("BoxShape3D_twkyj")
+
+[node name="RigidBody3D" type="RigidBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
+collision_layer = 129
+mass = 2000.0
+script = ExtResource("3_0g4nd")
+
+[node name="CSGBox3D" type="CSGBox3D" parent="RigidBody3D"]
+size = Vector3(5, 0.2, 10)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="RigidBody3D"]
+shape = SubResource("BoxShape3D_a2xfq")

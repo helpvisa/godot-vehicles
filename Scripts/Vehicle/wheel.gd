@@ -2,7 +2,6 @@
 extends Node3D
 
 # public / settable
-@export var pacejkaCurve: Curve
 @export var model: PackedScene
 @export var flipModel: bool = false
 @export var radius: float = 0.33
@@ -33,9 +32,13 @@ var grip: float = 1
 var maxDriveForce: float = 1400 * 9.8 # m * g; this is a default
 var weightAtWheel: float = 0
 var instancedModel: Node3D
+var collider: RigidBody3D = null
+var colliderPoint: Vector3 = Vector3.ZERO
 var pointVelocity: Vector3 = Vector3.ZERO
 var previousPointVelocity: Vector3 = Vector3.ZERO
 var forwardVelocity: Vector3 = Vector3.ZERO
+var steeringVelocity: Vector3 = Vector3.ZERO
+var dir: int = 0
 var angularVelocity: float = 0
 var previousAngularVelocity: float = 0
 
@@ -64,6 +67,12 @@ func updateWheelPosition(parent, delta):
 		target = result.position + global_basis.y * radius
 		normal = result.normal
 		isGrounded = true
+		if result.collider is RigidBody3D:
+			collider = result.collider
+			colliderPoint = result.position
+		else:
+			collider = null
+			colliderPoint = Vector3.ZERO
 	else:
 		suspensionOffset -= delta * (suspensionStrength / 10000)
 		suspensionOffset = clamp(suspensionOffset, 0, suspensionRange)
@@ -71,9 +80,9 @@ func updateWheelPosition(parent, delta):
 		normal = Vector3.ZERO
 		isGrounded = false
 	
-	instancedModel.position = to_local(target)
+	instancedModel.position = lerp(instancedModel.position, to_local(target), delta * 50)
 
-func calculateSuspensionForce(parent, delta) -> Vector3:
+func calculateSuspensionForce(delta) -> Vector3:
 	suspensionOffset = suspensionRange - springLength
 	springForce = suspensionOffset * suspensionStrength
 	springVelocity = (previousSpringLength - springLength) / delta
@@ -81,14 +90,11 @@ func calculateSuspensionForce(parent, delta) -> Vector3:
 	return springForce * global_basis.y
 
 func applyRollingResistance(delta):
-	var sign = sign(angularVelocity)
-	if (sign > 0):
-		angularVelocity -= rollingResistance * delta
-	else:
-		angularVelocity += rollingResistance * delta
+	var angular_dir = sign(angularVelocity)
+	angularVelocity -= (rollingResistance * angular_dir) * delta
 
 func setSteering(input):
 	rotation = baseRotation + Vector3(0, deg_to_rad(30 * input), 0)
 
 func animate(delta):
-	instancedModel.rotate_object_local(Vector3(1, 0, 0), -angularVelocity * delta)
+	instancedModel.rotate_object_local(Vector3(1, 0, 0), angularVelocity * delta)

@@ -44,10 +44,10 @@ clearcoat_enabled = true
 clearcoat_roughness = 0.15
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_terl1"]
-size = Vector3(1.4, 1, 3.6)
+size = Vector3(1.7, 1, 3.6)
 
 [node name="VehicleBody" type="RigidBody3D" node_paths=PackedStringArray("wheels")]
-mass = 1500.0
+mass = 1400.0
 physics_material_override = SubResource("PhysicsMaterial_raasi")
 center_of_mass_mode = 1
 center_of_mass = Vector3(0, -0.5, 0)
@@ -63,7 +63,7 @@ accelerationDebugMaterial = SubResource("StandardMaterial3D_1gtod")
 
 [node name="BodyModel" type="CSGBox3D" parent="."]
 transform = Transform3D(0.999999, 0.00130407, -0.000448988, -0.00130356, 0.999999, 0.00115332, 0.000450486, -0.00115274, 0.999999, 0, 0, 0)
-size = Vector3(1.4, 1, 3.6)
+size = Vector3(1.7, 1, 3.6)
 material = SubResource("StandardMaterial3D_4w3xr")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
@@ -72,16 +72,17 @@ shape = SubResource("BoxShape3D_terl1")
 [node name="Wheels" type="Node3D" parent="."]
 
 [node name="test_back_left" parent="Wheels" instance=ExtResource("4_3tn5c")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.6, -0.5, 1.2)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.75, -0.5, 1.2)
 
 [node name="test_back_right" parent="Wheels" instance=ExtResource("5_yjfsj")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.6, -0.5, 1.2)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.75, -0.5, 1.2)
 
 [node name="test_front_left" parent="Wheels" instance=ExtResource("6_60425")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.6, -0.5, -1.2)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.75, -0.5, -1.2)
 
 [node name="test_front_right" parent="Wheels" instance=ExtResource("7_ahsy3")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.6, -0.5, -1.2)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.75, -0.5, -1.2)
 
-[node name="Node" type="Node" parent="."]
+[node name="SteeringController" type="Node" parent="."]
 script = ExtResource("8_p1nep")
+steerSpeed = 5.0

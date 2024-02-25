@@ -54,14 +54,14 @@ func calculateSuspension(delta):
 	for idx in wheels.size():
 		wheels[idx].updateWheelPosition(self, delta)
 		if wheels[idx].isGrounded:
-			var suspensionForce = wheels[idx].calculateSuspensionForce(self, delta)
+			var suspensionForce = wheels[idx].calculateSuspensionForce(delta)
 			var suspensionDampingForce = wheels[idx].springVelocity * global_basis.y * wheels[idx].suspensionDamping
 			var totalAppliedForce = suspensionForce + suspensionDampingForce
 			apply_force(totalAppliedForce, wheels[idx].target - global_position)
 			# draw debug meshes
 			var tempSuspensionMesh = debugSuspension(\
 				to_local(wheels[idx].target),\
-				to_local(wheels[idx].target + totalAppliedForce/1000))
+				to_local(wheels[idx].target + totalAppliedForce/5000))
 			suspensionDebugDisplay[idx].mesh = tempSuspensionMesh
 		else:
 			suspensionDebugDisplay[idx].mesh = null
@@ -70,21 +70,36 @@ func calculateAcceleration(delta):
 	for idx in wheels.size():
 		if wheels[idx].isGrounded:
 			var flatPlane = Plane(wheels[idx].normal)
-			var pointVelocity = getPointVelocity(wheels[idx].target)
-			wheels[idx].pointVelocity = flatPlane.project(pointVelocity)
-			wheels[idx].forwardVelocity = wheels[idx].pointVelocity.project(wheels[idx].global_basis.z)
+			wheels[idx].pointVelocity = getPointVelocity(self, wheels[idx].target, wheels[idx].collider, wheels[idx].colliderPoint)
+			wheels[idx].forwardVelocity = flatPlane.project(wheels[idx].pointVelocity.project(wheels[idx].global_basis.z))
+			wheels[idx].steeringVelocity = flatPlane.project(wheels[idx].pointVelocity.project(wheels[idx].global_basis.x))
 			wheels[idx].angularVelocity = wheels[idx].forwardVelocity.length() / wheels[idx].radius
-			if (wheels[idx].forwardVelocity.dot(wheels[idx].basis.z) < 0):
-				wheels[idx].angularVelocity *= -1
+			wheels[idx].dir = sign(wheels[idx].forwardVelocity.dot(flatPlane.project(-wheels[idx].global_transform.basis.z)))
+			wheels[idx].angularVelocity *= wheels[idx].dir
 			if (wheels[idx].powered):
 				var debugAccel = Input.get_action_strength("accelerate")
 				debugAccel -= Input.get_action_strength("brake")
 				apply_force(debugAccel * -wheels[idx].global_basis.z * 5000, wheels[idx].target - global_position)
-				# draw debug meshes
+				# draw debug meshe
 				var tempAccelerationMesh = debugAcceleration(\
 				to_local(wheels[idx].target),\
 				to_local(wheels[idx].target + debugAccel * -wheels[idx].global_basis.z))
 				accelerationDebugDisplay[idx].mesh = tempAccelerationMesh
+			if (wheels[idx].brakes):
+				var brakeForce = Input.get_action_strength("handbrake") * 5000
+				var brakeDir = -wheels[idx].forwardVelocity
+				if brakeDir.length() > 1:
+					brakeDir = brakeDir.normalized()
+				apply_force(brakeForce * brakeDir, wheels[idx].target - global_position)
+				# draw debug mesh
+				if Input.get_action_strength("handbrake") > 0:
+					var tempAccelerationMesh = debugAcceleration(\
+					to_local(wheels[idx].target),\
+					to_local(wheels[idx].target + brakeDir))
+					accelerationDebugDisplay[idx].mesh = tempAccelerationMesh
+				elif !wheels[idx].powered:
+					var tempAccelerationMesh = null
+					accelerationDebugDisplay[idx].mesh = tempAccelerationMesh
 		else:
 			wheels[idx].applyRollingResistance(delta)
 			accelerationDebugDisplay[idx].mesh = null
@@ -94,27 +109,25 @@ func calculateAcceleration(delta):
 func calculateSteering():
 	for idx in wheels.size():
 		if wheels[idx].isGrounded:
-			var flatPlane = Plane(wheels[idx].normal)
-			var slip = getLateralSlip(wheels[idx].pointVelocity, idx, 20)
-			var steeringForce = wheels[idx].pointVelocity.project(wheels[idx].global_basis.x)
-			steeringForce = flatPlane.project(steeringForce)
-			# we want to zero the forces (ideal grip), then use slip to adjust how strong they are
+			var steeringForce = wheels[idx].steeringVelocity
+			var slip = getLateralSlip(wheels[idx].pointVelocity, steeringForce, idx)
 			var maxDriveForce = max(wheels[idx].maxDriveForce, 0)
 			var multiplier = pacejka_test(maxDriveForce, slip)
+			if steeringForce.length() > 1:
+				steeringForce = steeringForce.normalized()
 			if multiplier > 0:
 				apply_force(steeringForce * -multiplier, wheels[idx].target - global_position)
 			# draw debug meshes
 			var tempSteeringMesh = debugSteering(\
 				to_local(wheels[idx].target),\
-				to_local(wheels[idx].target + (steeringForce * -multiplier) / 10000))
+				to_local(wheels[idx].target + (steeringForce * -multiplier / 5000)))
 			steeringDebugDisplay[idx].mesh = tempSteeringMesh
 		else:
 			steeringDebugDisplay[idx].mesh = null
 
-func getLateralSlip(planeVelocity, idx, maxAngle = 180) -> float:
-	var wheelVelocity = planeVelocity.project(wheels[idx].basis.x).normalized()
-	var slipAngle = rad_to_deg(wheelVelocity.angle_to(planeVelocity.normalized()))
-	wheels[idx].slip = wheels[idx].pacejkaCurve.sample_baked(slipAngle / maxAngle) # divide for max slip angle
+func getLateralSlip(planeVelocity, wheelVelocity, idx) -> float:
+	var slipAngle = rad_to_deg(wheelVelocity.angle_to(planeVelocity))
+	wheels[idx].slip = slipAngle
 	return wheels[idx].slip
 
 func calculateWeightTransfer():
@@ -128,8 +141,12 @@ func calculateWeightTransfer():
 		wheels[idx].weightAtWheel = mass * percentage
 		wheels[idx].maxDriveForce = wheels[idx].weightAtWheel * 9.8
 
-func getPointVelocity(point: Vector3) -> Vector3:
-	return linear_velocity + angular_velocity.cross(point - (global_position + center_of_mass))
+func getPointVelocity(body: RigidBody3D, point: Vector3, otherBody: RigidBody3D = null, otherPoint: Vector3 = Vector3.ZERO) -> Vector3:
+	var globalVelocity = body.linear_velocity + body.angular_velocity.cross(point - (body.global_position + body.center_of_mass))
+	var otherVelocity = Vector3.ZERO
+	if otherBody:
+		otherVelocity = otherBody.linear_velocity + otherBody.angular_velocity.cross(otherPoint - (otherBody.global_position + otherBody.center_of_mass))
+	return globalVelocity - otherVelocity
 
 # input functions
 func updateSteering():
