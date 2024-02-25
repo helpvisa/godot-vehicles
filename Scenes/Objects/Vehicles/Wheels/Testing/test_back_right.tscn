@@ -8,6 +8,7 @@
 script = ExtResource("1_4aos4")
 pacejkaCurve = ExtResource("2_dtsiu")
 model = ExtResource("3_ix716")
+suspensionStrength = 32000.0
 suspensionDamping = 2400.0
 suspensionRange = 0.5
 colMask = 128

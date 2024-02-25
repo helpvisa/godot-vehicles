@@ -71,7 +71,7 @@ func updateWheelPosition(parent, delta):
 		normal = Vector3.ZERO
 		isGrounded = false
 	
-	instancedModel.global_position = target
+	instancedModel.position = to_local(target)
 
 func calculateSuspensionForce(parent, delta) -> Vector3:
 	suspensionOffset = suspensionRange - springLength
