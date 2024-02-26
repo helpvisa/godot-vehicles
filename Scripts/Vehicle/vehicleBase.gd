@@ -94,7 +94,10 @@ func calculateAcceleration(delta):
 		if wheels[idx].brakes:
 			torque += (brake * wheels[idx].brakeForce) * -wheels[idx].dir
 		
-		wheels[idx].angularVelocity += (torque / wheels[idx].inertia) * delta
+		if wheels[idx].powered:
+			wheels[idx].angularVelocity += (torque - (wheels[idx].grip * wheels[idx].radius)) * delta
+		else:
+			wheels[idx].angularVelocity += torque * delta
 		var slipRatio = ((wheels[idx].angularVelocity * wheels[idx].radius) \
 			- (wheels[idx].forwardVelocity.length() * wheels[idx].dir)) \
 			/ (wheels[idx].forwardVelocity.length())
@@ -108,16 +111,13 @@ func calculateAcceleration(delta):
 		if is_nan(wheels[idx].grip):
 			wheels[idx].grip = 0
 		
-		torque -= (wheels[idx].grip * wheels[idx].radius)
-		torque /= wheels[idx].radius
-		
 		if wheels[idx].isGrounded:
-			apply_force(torque * wheels[idx].forwardDirection, wheels[idx].target - global_position)
+			apply_force(wheels[idx].grip * wheels[idx].forwardDirection, wheels[idx].target - global_position)
 		
 		# draw debug mesh
 		var tempBrakingMesh = debugBraking(\
 		to_local(wheels[idx].target),\
-		to_local(wheels[idx].target + torque / 5000 * wheels[idx].forwardDirection))
+		to_local(wheels[idx].target + wheels[idx].grip / 5000 * wheels[idx].forwardDirection))
 		brakingDebugDisplay[idx].mesh = tempBrakingMesh
 		
 		wheels[idx].animate(delta)

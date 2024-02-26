@@ -33,7 +33,7 @@ func calcForce(weight, slip, lateral: bool = false):
 [resource]
 script = SubResource("GDScript_6ohvx")
 stiffness = 10.0
-longitudinalShape = 1.65
+longitudinalShape = 1.0
 lateralShape = 1.3
 peak = 1.0
 curvature = 0.97
