@@ -14,7 +14,7 @@ extends Node3D
 @export var powered: bool = true
 @export var steerable: bool = false
 @export var brakes: bool = true
-@export var brakeForce: float = 10000
+@export var brakeForce: float = 5000
 @export_flags_3d_physics var colMask
 
 # local

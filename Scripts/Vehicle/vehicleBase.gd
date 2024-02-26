@@ -69,75 +69,55 @@ func updateCoreData():
 			wheels[idx].forwardVelocity = flatPlane.project(wheels[idx].pointVelocity.project(wheels[idx].global_basis.z))
 			wheels[idx].forwardDirection = flatPlane.project(-wheels[idx].global_basis.z)
 			wheels[idx].lateralVelocity = flatPlane.project(wheels[idx].pointVelocity.project(wheels[idx].global_basis.x))
-			#wheels[idx].angularVelocity = wheels[idx].forwardVelocity.length() / wheels[idx].radius
+			wheels[idx].angularVelocity = wheels[idx].forwardVelocity.length() / wheels[idx].radius
 			wheels[idx].dir = sign(wheels[idx].forwardVelocity.dot(wheels[idx].forwardDirection))
-			#wheels[idx].angularVelocity *= wheels[idx].dir
+			wheels[idx].angularVelocity *= wheels[idx].dir
 			
 			# update engine RPM
 			engine.updateRPM(transmission)
 
 func calculateAcceleration(delta):
+	engine.updateTorque() # update engine torque
 	for idx in wheels.size():
-		# better logic could be more along lines of:
-		#	find engine force
-		#	apply RPM updates to transmission
-		#	bubble that down to axles
-		#	bubble from axles down to wheels
-		#	calculate slip at wheels (longitudinal)
-		var engineAccel = 0
-		var brakingAccel = 0
-		var factor = min(wheels[idx].forwardVelocity.length(), 1) # prevent animation jittering at low speeds
-		if (wheels[idx].powered):
-			# acceleration / engine braking
-			engine.updateTorque()
-			var maxAllowedAngularVelocity = engine.maxRPM * (2 * PI) / 60 / transmission.gears[transmission.currentGear] / transmission.finalDrive
-			if abs(wheels[idx].angularVelocity) > abs(maxAllowedAngularVelocity) \
+		var torque = 0
+		var factor = min(wheels[idx].forwardVelocity.length(), 1)
+		if wheels[idx].powered:
+			var maximumAngularVelocity = engine.maxRPM * (2 * PI) / 60 / transmission.gears[transmission.currentGear] / transmission.finalDrive
+			if (abs(wheels[idx].angularVelocity) > abs(maximumAngularVelocity)) \
 				or (transmission.gears[transmission.currentGear] < 0 and wheels[idx].angularVelocity > 0) \
 				or (transmission.gears[transmission.currentGear] > 0 and wheels[idx].angularVelocity < 0):
-					engineAccel = (engine.torque * abs(transmission.gears[transmission.currentGear]) * transmission.finalDrive) / (transmission.axles.size() * 2)
-					engineAccel *= -wheels[idx].dir * factor
+					torque = (engine.torque * abs(transmission.gears[transmission.currentGear]) * transmission.finalDrive)
+					torque *= -wheels[idx].dir
 			else:
-				engineAccel = engine.appliedTorque * transmission.gears[transmission.currentGear] * transmission.finalDrive
-				engineAccel /= transmission.axles.size() * 2
-		else:
-			wheels[idx].angularVelocity = wheels[idx].forwardVelocity.length() / wheels[idx].radius
-			wheels[idx].angularVelocity *= wheels[idx].dir
+				torque = (engine.appliedTorque * transmission.gears[transmission.currentGear] * transmission.finalDrive)
 		
-		if (wheels[idx].brakes):
-			brakingAccel = brake * wheels[idx].brakeForce * wheels[idx].inertia * factor
-			brakingAccel *= -wheels[idx].dir
+		if wheels[idx].brakes:
+			torque += (brake * wheels[idx].brakeForce) * -wheels[idx].dir
 		
-		# calculate slip ratio
-		var longitudinalSlip = 0
-		if wheels[idx].isGrounded:
-			longitudinalSlip = (wheels[idx].angularVelocity * wheels[idx].radius - (wheels[idx].forwardVelocity.length() * wheels[idx].dir)) / wheels[idx].forwardVelocity.length()
-		elif brake > 0:
-			longitudinalSlip = -1 # stop wheels in midair when brake applied
-		print(longitudinalSlip)
+		wheels[idx].angularVelocity += (torque / wheels[idx].inertia) * delta
+		var slipRatio = ((wheels[idx].angularVelocity * wheels[idx].radius) \
+			- (wheels[idx].forwardVelocity.length() * wheels[idx].dir)) \
+			/ (wheels[idx].forwardVelocity.length())
+		slipRatio = clamp(slipRatio, -1, 1)
+		print(slipRatio)
 		
-		if wheels[idx].tire:
-			wheels[idx].grip = wheels[idx].tire.calcForce(wheels[idx].maxDriveForce, longitudinalSlip * 100, false)
+		if slipRatio <= -1:
+			wheels[idx].angularVelocity = 0
+		
+		wheels[idx].grip = wheels[idx].tire.calcForce(wheels[idx].maxDriveForce, slipRatio * 100, false)
 		if is_nan(wheels[idx].grip):
 			wheels[idx].grip = 0
 		
-		# turn angular velocities into applied forces and rotations
-		#var rollingResistance = wheels[idx].rollingResistance * -wheels[idx].dir * factor
-		var totalTorque = engineAccel + brakingAccel - (wheels[idx].grip * wheels[idx].radius) #+ rollingResistance
-		var angularAcceleration = totalTorque / wheels[idx].inertia
-		
-		if wheels[idx].powered:
-			wheels[idx].angularVelocity += angularAcceleration * delta
-		
-		if longitudinalSlip <= -1:
-			wheels[idx].angularVelocity = 0
+		torque -= (wheels[idx].grip * wheels[idx].radius)
+		torque /= wheels[idx].radius
 		
 		if wheels[idx].isGrounded:
-			apply_force(wheels[idx].grip * wheels[idx].forwardDirection, wheels[idx].target - global_position)
+			apply_force(torque * wheels[idx].forwardDirection, wheels[idx].target - global_position)
 		
 		# draw debug mesh
 		var tempBrakingMesh = debugBraking(\
 		to_local(wheels[idx].target),\
-		to_local(wheels[idx].target + wheels[idx].grip / 5000 * wheels[idx].forwardDirection))
+		to_local(wheels[idx].target + torque / 5000 * wheels[idx].forwardDirection))
 		brakingDebugDisplay[idx].mesh = tempBrakingMesh
 		
 		wheels[idx].animate(delta)
