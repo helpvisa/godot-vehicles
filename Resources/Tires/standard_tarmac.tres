@@ -5,33 +5,35 @@ script/source = "extends Resource
 
 # public / settable
 @export var stiffness: float
-@export var shape: float
+@export var longitudinalShape: float
+@export var lateralShape: float
 @export var peak: float
 @export var curvature: float
 
-func _init(p_stiffness = 10.0, p_shape = 1.3, p_peak = 1.0, p_curvature = 0.97):
+func _init(p_stiffness = 10.0, p_longitudinalShape = 1.65, p_lateralShape = 1.3, p_peak = 1.0, p_curvature = 0.97):
 	stiffness = p_stiffness
-	shape = p_shape
+	longitudinalShape = p_longitudinalShape
+	lateralShape = p_lateralShape
 	peak = p_peak
 	curvature = p_curvature
 
-func calcForce(weight, slip):
-	var stiffness = 10
-	var shape = 1.3
-	var peak = 1
-	var curvature = 0.97
-	
+func calcForce(weight, slip, lateral: bool = false):
+	var localShape = longitudinalShape
+	if lateral:
+		localShape = lateralShape
 	var force = \\
 		weight * \\
 		peak * \\
-		sin(shape * \\
+		sin(localShape * \\
 		atan(stiffness * slip - \\
 		curvature * (atan(stiffness * slip))))
-	return force"
+	return force
+"
 
 [resource]
 script = SubResource("GDScript_6ohvx")
-stiffness = 0.0
-shape = 0.0
-peak = 0.0
-curvature = 0.0
+stiffness = 10.0
+longitudinalShape = 1.65
+lateralShape = 1.3
+peak = 1.0
+curvature = 0.97
