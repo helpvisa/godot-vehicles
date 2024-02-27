@@ -28,7 +28,7 @@ albedo_color = Color(1, 0, 0, 1)
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_grjdi"]
 shading_mode = 0
-albedo_color = Color(1, 0, 0.933333, 1)
+albedo_color = Color(1, 0.141176, 1, 1)
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_terl1"]
 size = Vector3(2.01106, 0.989319, 4.45191)
@@ -67,8 +67,8 @@ model = ExtResource("7_20k78")
 radius = 0.36
 weight = 25.0
 rollingResistance = 0.0
-suspensionStrength = 42000.0
-suspensionDamping = 2400.0
+suspensionStrength = 56000.0
+suspensionDamping = 3800.0
 suspensionRange = 0.35
 brakeForce = 2000.0
 
@@ -79,8 +79,8 @@ model = ExtResource("7_20k78")
 radius = 0.36
 weight = 25.0
 rollingResistance = 0.0
-suspensionStrength = 42000.0
-suspensionDamping = 2400.0
+suspensionStrength = 56000.0
+suspensionDamping = 3800.0
 suspensionRange = 0.35
 brakeForce = 2000.0
 
@@ -97,8 +97,8 @@ model = ExtResource("7_20k78")
 radius = 0.36
 weight = 25.0
 rollingResistance = 0.0
-suspensionStrength = 42000.0
-suspensionDamping = 2400.0
+suspensionStrength = 56000.0
+suspensionDamping = 3800.0
 suspensionRange = 0.35
 brakeForce = 2000.0
 
@@ -109,8 +109,8 @@ model = ExtResource("7_20k78")
 radius = 0.36
 weight = 25.0
 rollingResistance = 0.0
-suspensionStrength = 42000.0
-suspensionDamping = 2400.0
+suspensionStrength = 56000.0
+suspensionDamping = 3800.0
 suspensionRange = 0.35
 brakeForce = 2000.0
 
