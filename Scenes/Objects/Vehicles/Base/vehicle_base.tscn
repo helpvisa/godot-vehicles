@@ -1,4 +1,4 @@
-[gd_scene load_steps=19 format=3 uid="uid://m0vo372ghciq"]
+[gd_scene load_steps=23 format=3 uid="uid://m0vo372ghciq"]
 
 [ext_resource type="Script" path="res://Scripts/Vehicle/vehicleBase.gd" id="1_rjs8e"]
 [ext_resource type="PackedScene" uid="uid://di60ndesnskpv" path="res://Scenes/Objects/Vehicles/Wheels/Testing/test_back_left.tscn" id="4_3tn5c"]
@@ -30,12 +30,37 @@ albedo_color = Color(1, 0, 0, 1)
 shading_mode = 0
 albedo_color = Color(1, 0.141176, 1, 1)
 
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_bh66l"]
+albedo_color = Color(0.980392, 0.85098, 0, 1)
+metallic = 1.0
+roughness = 0.25
+clearcoat_enabled = true
+clearcoat_roughness = 0.05
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_evrj0"]
+seed = 2420
+frequency = 0.5915
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_f2b28"]
+seamless = true
+seamless_blend_skirt = 1.0
+noise = SubResource("FastNoiseLite_evrj0")
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_7bu2u"]
+transparency = 1
+albedo_color = Color(0.788235, 1, 1, 0.0509804)
+roughness = 0.0
+refraction_scale = 0.02
+refraction_texture = SubResource("NoiseTexture2D_f2b28")
+
 [sub_resource type="BoxShape3D" id="BoxShape3D_terl1"]
 size = Vector3(2.01106, 0.989319, 4.45191)
 
 [node name="VehicleBody" type="RigidBody3D" node_paths=PackedStringArray("engine", "transmission", "wheels")]
 mass = 1708.0
 physics_material_override = SubResource("PhysicsMaterial_raasi")
+center_of_mass_mode = 1
+center_of_mass = Vector3(0, -0.15, 0)
 can_sleep = false
 continuous_cd = true
 script = ExtResource("1_rjs8e")
@@ -48,6 +73,11 @@ brakingDebugMaterial = SubResource("StandardMaterial3D_grjdi")
 
 [node name="Model" parent="." instance=ExtResource("12_ipgcc")]
 
+[node name="Ferrari Testarossa" parent="Model" index="0"]
+layers = 2
+surface_material_override/0 = SubResource("StandardMaterial3D_bh66l")
+surface_material_override/6 = SubResource("StandardMaterial3D_7bu2u")
+
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.0067504, 0.107116, -0.241611)
 shape = SubResource("BoxShape3D_terl1")
@@ -57,30 +87,28 @@ shape = SubResource("BoxShape3D_terl1")
 [node name="Front" type="Node3D" parent="Axles" node_paths=PackedStringArray("wheels")]
 script = ExtResource("4_y7n0l")
 wheels = [NodePath("test_front_left"), NodePath("test_front_right")]
-wheelBase = 2.5
+wheelBase = 2.56
 rearTrack = 1.72
 
 [node name="test_front_left" parent="Axles/Front" instance=ExtResource("6_60425")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.8, -0.32, -1.35)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.8, -0.35, -1.35)
 tire = ExtResource("5_or7w5")
 model = ExtResource("7_20k78")
-radius = 0.36
-weight = 25.0
+radius = 0.37
 rollingResistance = 0.0
-suspensionStrength = 56000.0
-suspensionDamping = 3800.0
+suspensionStrength = 112000.0
+suspensionDamping = 6500.0
 suspensionRange = 0.35
 brakeForce = 2000.0
 
 [node name="test_front_right" parent="Axles/Front" instance=ExtResource("7_ahsy3")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.8, -0.32, -1.35)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.8, -0.35, -1.35)
 tire = ExtResource("5_or7w5")
 model = ExtResource("7_20k78")
-radius = 0.36
-weight = 25.0
+radius = 0.37
 rollingResistance = 0.0
-suspensionStrength = 56000.0
-suspensionDamping = 3800.0
+suspensionStrength = 112000.0
+suspensionDamping = 6500.0
 suspensionRange = 0.35
 brakeForce = 2000.0
 
@@ -91,26 +119,24 @@ wheels = [NodePath("Differential/test_back_left"), NodePath("Differential/test_b
 [node name="Differential" type="Node3D" parent="Axles/Rear"]
 
 [node name="test_back_left" parent="Axles/Rear/Differential" instance=ExtResource("4_3tn5c")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.86, -0.35, 1.15)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.86, -0.35, 1.18)
 tire = ExtResource("5_or7w5")
 model = ExtResource("7_20k78")
-radius = 0.36
-weight = 25.0
+radius = 0.37
 rollingResistance = 0.0
-suspensionStrength = 56000.0
-suspensionDamping = 3800.0
+suspensionStrength = 112000.0
+suspensionDamping = 6500.0
 suspensionRange = 0.35
 brakeForce = 2000.0
 
 [node name="test_back_right" parent="Axles/Rear/Differential" instance=ExtResource("5_yjfsj")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.86, -0.35, 1.15)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.86, -0.35, 1.18)
 tire = ExtResource("5_or7w5")
 model = ExtResource("7_20k78")
-radius = 0.36
-weight = 25.0
+radius = 0.37
 rollingResistance = 0.0
-suspensionStrength = 56000.0
-suspensionDamping = 3800.0
+suspensionStrength = 112000.0
+suspensionDamping = 6500.0
 suspensionRange = 0.35
 brakeForce = 2000.0
 
@@ -125,12 +151,17 @@ vehicle = NodePath("..")
 [node name="Engine" type="Node3D" parent="."]
 script = ExtResource("11_do56q")
 torqueCurve = ExtResource("12_iswdd")
+maxRPM = 6750.0
+minRPM = 800.0
 
 [node name="Transmission" type="Node3D" parent="." node_paths=PackedStringArray("axles")]
 script = ExtResource("13_go8gw")
 axles = [NodePath("../Axles/Rear")]
 gears = Array[float]([-3.35, 3.139, 2.104, 1.526, 1.167, 0.875])
-finalDrive = 3.21
+finalDrive = 3.41
 
 [node name="ReflectionProbe" type="ReflectionProbe" parent="."]
 update_mode = 1
+cull_mask = 1048573
+
+[editable path="Model"]

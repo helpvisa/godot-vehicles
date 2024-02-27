@@ -33,6 +33,7 @@ var currentRPM: float = 0
 var inertia: float = 1
 var slip: float = 1
 var grip: float = 1
+var lateralGrip: float = 1
 var maxDriveForce: float = 1400 * 9.8 # m * g; this is a default
 var weightAtWheel: float = 0
 var instancedModel: Node3D

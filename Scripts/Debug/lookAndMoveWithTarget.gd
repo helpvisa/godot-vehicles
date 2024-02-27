@@ -10,7 +10,9 @@ func _process(delta):
 		targetVelocity = targetVelocity.lerp(target.linear_velocity, delta)
 		var leftBasis = Input.get_action_strength("look_left") * -target.global_basis.x * 10
 		var rightBasis = Input.get_action_strength("look_right") * target.global_basis.x * 10
-		var newTarget = -target.global_basis.z + leftBasis + rightBasis
+		var newTarget = -target.global_basis.z
+		if leftBasis.length() > 0 or rightBasis.length() > 0:
+			newTarget = leftBasis + rightBasis
 		targetBasis = lerp(targetBasis, newTarget, delta * 10)
 		global_position = lerp(global_position, target.global_position, delta * 10)
 		look_at(target.global_position + targetBasis + (targetVelocity * factor))

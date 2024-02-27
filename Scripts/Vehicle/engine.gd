@@ -18,5 +18,5 @@ func updateRPM(transmission) -> float:
 
 func updateTorque() -> float:
 	torque = torqueCurve.sample_baked((currentRPM) / maxRPM)
-	appliedTorque = torque * throttle
+	appliedTorque = torque * (throttle * throttle)
 	return appliedTorque
