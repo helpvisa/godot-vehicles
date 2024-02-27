@@ -80,7 +80,7 @@ func calculateAcceleration(delta):
 	engine.updateTorque() # update engine torque
 	for idx in wheels.size():
 		var torque = 0
-		var factor = min(wheels[idx].forwardVelocity.length(), 1)
+		var factor = min(wheels[idx].forwardVelocity.length_squared(), 1)
 		if wheels[idx].powered:
 			var maximumAngularVelocity = engine.maxRPM * (2 * PI) / 60 / transmission.gears[transmission.currentGear] / transmission.finalDrive
 			if (abs(wheels[idx].angularVelocity) > abs(maximumAngularVelocity)) \
@@ -92,22 +92,21 @@ func calculateAcceleration(delta):
 				torque = (engine.appliedTorque * transmission.gears[transmission.currentGear] * transmission.finalDrive)
 		
 		if wheels[idx].brakes:
-			torque += (brake * wheels[idx].brakeForce) * -wheels[idx].dir
+			torque += min(brake * wheels[idx].brakeForce, abs(wheels[idx].angularVelocity) / wheels[idx].radius) * -wheels[idx].dir * factor
 		
-		if wheels[idx].powered:
-			wheels[idx].angularVelocity += (torque - (wheels[idx].grip * wheels[idx].radius)) * delta
-		else:
-			wheels[idx].angularVelocity += torque * delta
+		#if wheels[idx].powered:
+		wheels[idx].angularVelocity += ((torque + min(abs(wheels[idx].grip) * wheels[idx].radius, abs(torque)) * -wheels[idx].dir) / wheels[idx].inertia) * delta
+		#else:
+			#wheels[idx].angularVelocity += torque * delta
 		var slipRatio = ((wheels[idx].angularVelocity * wheels[idx].radius) \
 			- (wheels[idx].forwardVelocity.length() * wheels[idx].dir)) \
 			/ (wheels[idx].forwardVelocity.length())
-		slipRatio = clamp(slipRatio, -1, 1)
-		print(slipRatio)
+		#slipRatio = clamp(slipRatio, -1, 1)
 		
 		if slipRatio <= -1:
 			wheels[idx].angularVelocity = 0
 		
-		wheels[idx].grip = wheels[idx].tire.calcForce(wheels[idx].maxDriveForce, slipRatio * 100, false)
+		wheels[idx].grip = wheels[idx].tire.calcForce(wheels[idx].springForce + wheels[idx].maxDriveForce, slipRatio * 100, false)
 		if is_nan(wheels[idx].grip):
 			wheels[idx].grip = 0
 		
@@ -129,7 +128,7 @@ func calculateSteering():
 			var slip = wheels[idx].getLateralSlip()
 			var multiplier = 0
 			if wheels[idx].tire:
-				multiplier = wheels[idx].tire.calcForce(wheels[idx].maxDriveForce, slip, true)
+				multiplier = wheels[idx].tire.calcForce(wheels[idx].maxDriveForce + wheels[idx].springForce, slip, true)
 			if steeringForce.length() > 1:
 				steeringForce = steeringForce.normalized()
 			if multiplier > 0:
