@@ -7,14 +7,13 @@ extends Node3D
 @export var flipModel: bool = false
 @export var radius: float = 0.33
 @export var weight: float = 75 # in kg
-@export var rollingResistance: float = 100
 @export var suspensionStrength: float = 24000
 @export var suspensionDamping: float = 1800
 @export var suspensionRange: float = 0.6
 @export var powered: bool = true
 @export var steerable: bool = false
 @export var brakes: bool = true
-@export var brakeForce: float = 5000
+@export var brakeForce: float = 1000
 @export_flags_3d_physics var colMask
 
 # local

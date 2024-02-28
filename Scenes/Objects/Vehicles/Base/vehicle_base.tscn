@@ -95,22 +95,18 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.8, -0.35, -1.35)
 tire = ExtResource("5_or7w5")
 model = ExtResource("7_20k78")
 radius = 0.37
-rollingResistance = 0.0
 suspensionStrength = 112000.0
 suspensionDamping = 6500.0
 suspensionRange = 0.35
-brakeForce = 2000.0
 
 [node name="test_front_right" parent="Axles/Front" instance=ExtResource("7_ahsy3")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.8, -0.35, -1.35)
 tire = ExtResource("5_or7w5")
 model = ExtResource("7_20k78")
 radius = 0.37
-rollingResistance = 0.0
 suspensionStrength = 112000.0
 suspensionDamping = 6500.0
 suspensionRange = 0.35
-brakeForce = 2000.0
 
 [node name="Rear" type="Node3D" parent="Axles" node_paths=PackedStringArray("wheels")]
 script = ExtResource("4_y7n0l")
@@ -123,26 +119,23 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.86, -0.35, 1.18)
 tire = ExtResource("5_or7w5")
 model = ExtResource("7_20k78")
 radius = 0.37
-rollingResistance = 0.0
 suspensionStrength = 112000.0
 suspensionDamping = 6500.0
 suspensionRange = 0.35
-brakeForce = 2000.0
 
 [node name="test_back_right" parent="Axles/Rear/Differential" instance=ExtResource("5_yjfsj")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.86, -0.35, 1.18)
 tire = ExtResource("5_or7w5")
 model = ExtResource("7_20k78")
 radius = 0.37
-rollingResistance = 0.0
 suspensionStrength = 112000.0
 suspensionDamping = 6500.0
 suspensionRange = 0.35
-brakeForce = 2000.0
 
 [node name="InputController" type="Node" parent="." node_paths=PackedStringArray("axles", "engine", "transmission", "vehicle")]
 script = ExtResource("10_flovk")
-steerSpeed = 5.0
+throttleSpeed = 5.0
+brakeSpeed = 5.0
 axles = [NodePath("../Axles/Front")]
 engine = NodePath("../Engine")
 transmission = NodePath("../Transmission")
