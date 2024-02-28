@@ -29,12 +29,12 @@ func gatherInput(delta):
 	# throttle & brake
 	throttleTarget = Input.get_action_strength("accelerate")
 	if throttleTarget < throttle:
-		throttle = lerp(throttle, throttleTarget, throttleSpeed * delta * 5)
+		throttle = lerp(throttle, throttleTarget, throttleSpeed * delta * 10)
 	else:
 		throttle = lerp(throttle, throttleTarget, throttleSpeed * delta)
 	brakeTarget = Input.get_action_strength("brake")
 	if brakeTarget < brake:
-		brake = lerp(brake, brakeTarget, brakeSpeed * delta * 5)
+		brake = lerp(brake, brakeTarget, brakeSpeed * delta * 10)
 	else:
 		brake = lerp(brake, brakeTarget, brakeSpeed * delta)
 	

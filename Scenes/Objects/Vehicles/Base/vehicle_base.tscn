@@ -134,8 +134,6 @@ suspensionRange = 0.35
 
 [node name="InputController" type="Node" parent="." node_paths=PackedStringArray("axles", "engine", "transmission", "vehicle")]
 script = ExtResource("10_flovk")
-throttleSpeed = 5.0
-brakeSpeed = 5.0
 axles = [NodePath("../Axles/Front")]
 engine = NodePath("../Engine")
 transmission = NodePath("../Transmission")

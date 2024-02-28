@@ -39,7 +39,6 @@ func _ready():
 
 func _physics_process(delta):
 	calculateSuspension(delta)
-	calculateWeightTransfer()
 	updateCoreData()
 	calculateAcceleration(delta)
 	calculateSteering()
@@ -88,24 +87,28 @@ func calculateAcceleration(delta):
 			if (abs(wheels[idx].angularVelocity) > abs(maximumAngularVelocity)) \
 				or (transmission.gears[transmission.currentGear] < 0 and wheels[idx].angularVelocity > 0) \
 				or (transmission.gears[transmission.currentGear] > 0 and wheels[idx].angularVelocity < 0):
-					torque = (engine.torque * abs(transmission.gears[transmission.currentGear]) * transmission.finalDrive)
+					torque = engine.torque * abs(transmission.gears[transmission.currentGear]) * transmission.finalDrive * transmission.transmissionLoss
 					torque *= -wheels[idx].dir
 			else:
-				torque = (engine.appliedTorque * transmission.gears[transmission.currentGear] * transmission.finalDrive)
+				torque = engine.appliedTorque * transmission.gears[transmission.currentGear] * transmission.finalDrive * transmission.transmissionLoss
 		
 		if wheels[idx].brakes:
-			torque += ((brake * brake) * wheels[idx].brakeForce) / (wheels[idx].radius) * -wheels[idx].dir * factor
+			torque += ((brake * brake) * wheels[idx].brakeForce) / (wheels[idx].radius) * -wheels[idx].dir
 		
-		var rollingResistance = (wheels[idx].forwardVelocity.length() * delta / wheels[idx].radius * -wheels[idx].dir) * wheels[idx].maxDriveForce
-		#torque += rollingResistance * factor
+		var rollingResistance = 0.014 * wheels[idx].springForce * -wheels[idx].dir * wheels[idx].radius
+		#rollingResistance *= factor
 		
-		wheels[idx].grip = clamp(wheels[idx].grip, -abs(torque), abs(torque))
-		wheels[idx].angularVelocity += ((torque - (wheels[idx].grip * wheels[idx].radius)) / wheels[idx].inertia) * delta
-		#wheels[idx].angularVelocity += torque / wheels[idx].inertia * delta
-		var slipRatio = ((wheels[idx].angularVelocity * wheels[idx].radius * delta) \
-			- (wheels[idx].forwardVelocity.length() * wheels[idx].dir * delta)) \
-			/ (wheels[idx].forwardVelocity.length() * delta)
-		print(idx, ": ", slipRatio)
+		wheels[idx].angularVelocity += (torque - (wheels[idx].grip * 2) * wheels[idx].radius) / wheels[idx].inertia * delta
+		
+		# calculating like this is a fools errand...
+		# instead: calculate drive at axle level, then sum traction torques from attached wheels at axle
+		# bubble that force up to here (locked differential for now)
+		var slipRatio = ((wheels[idx].angularVelocity * wheels[idx].radius) \
+			- (wheels[idx].forwardVelocity.length() * wheels[idx].dir)) \
+			/ wheels[idx].forwardVelocity.length()
+		#print('slip at ', idx, ": ", slipRatio)
+		#print('spring at ', idx, '--', wheels[idx].springForce)
+		#print('torque at ', idx, ' ++ ', torque)
 		if slipRatio <= -1:
 			wheels[idx].angularVelocity = 0
 		
@@ -130,11 +133,11 @@ func applyTotalForces():
 		if steeringDirection.length() > 1:
 			steeringDirection = steeringDirection.normalized()
 		
-		var totalForce = abs(wheels[idx].grip) + abs(wheels[idx].lateralGrip)
-		var percentLateral = abs(wheels[idx].lateralGrip) / totalForce
-		var percentLongitudinal = 1 - percentLateral
-		var appliedLateralForce = wheels[idx].lateralGrip#wheels[idx].maxDriveForce * percentLateral
-		var appliedLongitudinalForce = wheels[idx].grip#wheels[idx].maxDriveForce * percentLongitudinal * sign(wheels[idx].grip)
+		#var totalForce = abs(wheels[idx].grip) + abs(wheels[idx].lateralGrip)
+		#var percentLateral = abs(wheels[idx].lateralGrip) / totalForce
+		#var percentLongitudinal = 1 - percentLateral
+		var appliedLateralForce = wheels[idx].lateralGrip#wheels[idx].springForce * percentLateral
+		var appliedLongitudinalForce = wheels[idx].grip#wheels[idx].springForce * percentLongitudinal * sign(wheels[idx].grip)
 		
 		if !is_nan(appliedLateralForce) && !is_nan(appliedLongitudinalForce) && wheels[idx].isGrounded:
 			apply_force(steeringDirection * -appliedLateralForce, wheels[idx].target - global_position)
@@ -152,18 +155,6 @@ func applyTotalForces():
 		else:
 			steeringDebugDisplay[idx].mesh = null
 			brakingDebugDisplay[idx].mesh = null
-
-func calculateWeightTransfer():
-	var totalForce = mass * 9.8
-	# first find total suspension force
-	#for idx in wheels.size():
-		#totalForce += wheels[idx].springForce
-	# now use it to find percentage of vehicle's weight being applied at wheel
-	for idx in wheels.size():
-		var percentage = wheels[idx].springForce / totalForce
-		wheels[idx].weightAtWheel = mass * percentage
-		wheels[idx].maxDriveForce = wheels[idx].weightAtWheel * 9.8
-		#wheels[idx].maxDriveForce = min(max(wheels[idx].weightAtWheel * 9.8, mass * 9.8 * 0.2), mass * 9.8 * 0.7)
 
 func getPointVelocity(body: RigidBody3D, point: Vector3, otherBody: RigidBody3D = null, otherPoint: Vector3 = Vector3.ZERO) -> Vector3:
 	var globalVelocity = body.linear_velocity + body.angular_velocity.cross(point - (body.global_position + body.center_of_mass))
