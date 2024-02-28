@@ -141,7 +141,7 @@ func applyTotalForces():
 		var appliedLateralForce = clamp(wheels[idx].lateralGrip, 0, wheels[idx].maxDriveForce)#wheels[idx].maxDriveForce * percentLateral
 		var appliedLongitudinalForce = clamp(wheels[idx].grip, -wheels[idx].maxDriveForce, wheels[idx].maxDriveForce)#wheels[idx].maxDriveForce * percentLongitudinal * sign(wheels[idx].grip)
 		
-		if !is_nan(appliedLateralForce) && !is_nan(appliedLongitudinalForce):
+		if !is_nan(appliedLateralForce) && !is_nan(appliedLongitudinalForce) && wheels[idx].isGrounded:
 			wheels[idx].grip = appliedLongitudinalForce
 			apply_force(steeringDirection * -appliedLateralForce, wheels[idx].target - global_position)
 			apply_force(appliedLongitudinalForce * wheels[idx].forwardDirection, wheels[idx].target - global_position)
@@ -165,7 +165,8 @@ func calculateWeightTransfer():
 	for idx in wheels.size():
 		var percentage = wheels[idx].springForce / totalForce
 		wheels[idx].weightAtWheel = mass * percentage
-		wheels[idx].maxDriveForce = max(wheels[idx].weightAtWheel * 9.8, 0)
+		wheels[idx].maxDriveForce = mass * 9.8 / 4
+		#wheels[idx].maxDriveForce = min(max(wheels[idx].weightAtWheel * 9.8, mass * 9.8 * 0.2), mass * 9.8 * 0.7)
 
 func getPointVelocity(body: RigidBody3D, point: Vector3, otherBody: RigidBody3D = null, otherPoint: Vector3 = Vector3.ZERO) -> Vector3:
 	var globalVelocity = body.linear_velocity + body.angular_velocity.cross(point - (body.global_position + body.center_of_mass))
